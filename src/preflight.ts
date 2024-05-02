@@ -6,11 +6,11 @@ export const preflight = async (
 ): Promise<MappingsT> => {
   let m = JSON.stringify(mappings);
   if (m) {
-    for (const [tag, value] of replacer) {
+    replacer.forEach((tag, value) => {
       if (value !== undefined) {
         m = m.replace(tag, value);
       }
-    }
+    });
     return JSON.parse(m);
   }
   return {} as MappingsT;

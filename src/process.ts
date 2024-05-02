@@ -1,5 +1,5 @@
 import { JSONValues, JSONObject } from "@/types/generics";
-import { applyFunction } from "./functions";
+import { applyFunction } from "@/functions";
 
 export const getValue = (data: JSONValues, _target: string): JSONValues => {
   if (data === undefined) return;

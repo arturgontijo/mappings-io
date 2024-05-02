@@ -1,7 +1,7 @@
 import { MappingsT } from "@/types/generics";
-import { call } from "./call";
-import { preflight } from "./preflight";
-import { transformDataWithMapping } from "./process";
+import { call } from "@/api/call";
+import { preflight } from "@/preflight";
+import { transformDataWithMapping } from "@/process";
 
 export const run = async (
   mappings: MappingsT,

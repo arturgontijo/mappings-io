@@ -1,4 +1,4 @@
-import { call } from "@/call";
+import { call } from "@/api/call";
 import { getOneMapping } from "./data/load";
 import { MappingsT } from "@/types/generics";
 import { describe, expect, it } from "@jest/globals";
