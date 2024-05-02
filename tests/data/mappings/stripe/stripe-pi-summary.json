@@ -1,0 +1,17 @@
+{
+  "id": "stripe-payment-intents-summary",
+  "url": "https://<USERNAME>:<PASSWORD>@api.stripe.com/v1/payment_intents",
+  "params": {
+    "limit": 3
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "mappings": {
+    "summary": {
+      "-xforms": {
+        "::sales": ["Sum", ["data.amount"]]
+      }
+    }
+  }
+}

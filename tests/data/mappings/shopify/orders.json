@@ -1,0 +1,26 @@
+{
+  "id": "shopify-orders",
+  "url": "https://<STORE_NAME>.myshopify.com/admin/api/2024-01/orders.json",
+  "params": {
+    "status": "closed",
+    "financial_status": "paid",
+    "created_at_min": "<START_DATE_TIME>",
+    "created_at_max": "<END_DATE_TIME>",
+    "limit": 250
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Shopify-Access-Token": "<ACCESS_TOKEN>"
+  },
+  "mappings": {
+    "sales": {
+      "-target": "orders",
+      "-xforms": {
+        "products": "line_items.name",
+        "price": "total_price",
+        "status": "financial_status",
+        "date": "created_at"
+      }
+    }
+  }
+}

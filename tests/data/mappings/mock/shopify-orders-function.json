@@ -1,0 +1,21 @@
+{
+  "id": "mock-shopify-orders-function",
+  "url": "https://<STORE_NAME>.myshopify.com/admin/api/2024-01/orders.json",
+  "params": {
+    "status": "any",
+    "limit": "250"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Shopify-Access-Token": "<ACCESS_TOKEN>"
+  },
+  "mappings": {
+    "functions": {
+      "-xforms": {
+        "::total": ["Sum", ["orders.total_price"]],
+        "::tax": ["Sum", ["orders.total_tax"]],
+        "::dates": ["DateTzTs", ["orders.created_at"]]
+      }
+    }
+  }
+}

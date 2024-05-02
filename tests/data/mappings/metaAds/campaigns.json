@@ -1,0 +1,23 @@
+{
+  "id": "meta-ads-campaigns",
+  "url": "https://graph.facebook.com/<API_VERSION>/<CAMPAIGN_ID>",
+  "params": {
+    "fields": "id,name,effective_status,start_time,stop_time,insights{spend,impressions,clicks,reach,cpm,cpc}",
+    "access_token": "<ACCESS_TOKEN>"
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "mappings": {
+    "campaigns": {
+      "-xforms": {
+        "campaignId": "id",
+        "campaignName": "name",
+        "campaignStatus": "effective_status",
+        "campaignStartAt": "start_time",
+        "campaignStopAt": "stop_time",
+        "campaignInsights": "insights.data"
+      }
+    }
+  }
+}

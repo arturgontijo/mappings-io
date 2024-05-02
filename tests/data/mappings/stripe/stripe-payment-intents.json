@@ -1,0 +1,20 @@
+{
+  "id": "stripe-payment-intents",
+  "url": "https://<USERNAME>:<PASSWORD>@api.stripe.com/v1/payment_intents",
+  "params": {
+    "limit": 3
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "mappings": {
+    "sales": {
+      "-target": "data",
+      "-xforms": {
+        "uid": "id",
+        "value": "amount",
+        "::date": ["DateTsTz", ["created"]]
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "mock-shopify-orders-summary",
+  "url": "https://<STORE_NAME>.myshopify.com/admin/api/2024-01/orders.json",
+  "params": {
+    "status": "any",
+    "limit": "250"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Shopify-Access-Token": "<ACCESS_TOKEN>"
+  },
+  "mappings": {
+    "summary": {
+      "-xforms": {
+        "::items": ["Sum", ["orders.line_items.quantity"]],
+        "::total": ["Sum", ["orders.total_price"]]
+      }
+    }
+  }
+}

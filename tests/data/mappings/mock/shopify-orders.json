@@ -1,0 +1,23 @@
+{
+  "id": "mock-shopify-orders",
+  "url": "https://<STORE_NAME>.myshopify.com/admin/api/2024-01/orders.json",
+  "params": {
+    "status": "any",
+    "limit": "250"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Shopify-Access-Token": "<ACCESS_TOKEN>"
+  },
+  "mappings": {
+    "sales": {
+      "-target": "orders",
+      "-xforms": {
+        "email": "customer.email",
+        "products": "line_items.name",
+        "price": "total_price",
+        "status": "financial_status"
+      }
+    }
+  }
+}

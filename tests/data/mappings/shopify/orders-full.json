@@ -1,0 +1,35 @@
+{
+  "id": "shopify-orders-full",
+  "url": "https://<STORE_NAME>.myshopify.com/admin/api/2024-01/orders.json",
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Shopify-Access-Token": "<ACCESS_TOKEN>"
+  },
+  "params": {
+    "limit": 250,
+    "status": "any"
+  },
+  "mappings": {
+    "pedidos": {
+      "-target": "orders",
+      "-xforms": {
+        "uid": "id",
+        "criadoEm": "created_at",
+        "nome": "billing_address.first_name",
+        "cidade": "billing_address.city",
+        "gateway": "payment_gateway_names.0",
+        "moeda": "currency",
+        "preço": "total_price",
+        "items": {
+          "-target": "line_items",
+          "-xforms": {
+            "id": "product_id",
+            "nome": "name",
+            "preço": "price",
+            "quantidade": "quantity"
+          }
+        }
+      }
+    }
+  }
+}

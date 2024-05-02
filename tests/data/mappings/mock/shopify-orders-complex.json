@@ -1,0 +1,30 @@
+{
+  "id": "mock-shopify-orders-complex",
+  "url": "https://<STORE_NAME>.myshopify.com/admin/api/2024-01/orders.json",
+  "params": {
+    "status": "any",
+    "limit": "250"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Shopify-Access-Token": "<ACCESS_TOKEN>"
+  },
+  "mappings": {
+    "sales": {
+      "-xforms": {
+        "products": {
+          "-target": "orders",
+          "-xforms": {
+            "details": {
+              "-target": "line_items",
+              "-xforms": {
+                "name": "name",
+                "rate": "tax_lines.rate"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
