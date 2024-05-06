@@ -2,13 +2,19 @@
   "name": "mappings-io",
   "version": "0.0.1",
   "description": "Almost no-code API integrations.",
-  "main": "index.js",
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "lint": "eslint .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsup"
   },
   "repository": {
     "type": "git",
@@ -43,6 +49,7 @@
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.8.0"
   },

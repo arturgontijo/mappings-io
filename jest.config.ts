@@ -7,6 +7,7 @@ const jestConfig: JestConfigWithTsJest = {
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1",
   },
+  testMatch: ["<rootDir>/tests/**/*.test.ts"],
 };
 
 export default jestConfig;

@@ -43,7 +43,7 @@ export const transformWithFunction = (data: JSONObject, specs: JSONObject) => {
 
 export const transformDataWithMapping = (
   data: JSONObject,
-  mappings: JSONObject,
+  mappings: JSONObject | undefined,
 ) => {
   const final: JSONObject = {};
 

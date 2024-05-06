@@ -12,9 +12,9 @@ export type MappingsT = {
   id: string;
   url: string;
   method?: string;
-  params: JSONObject;
-  headers: JSONObject;
+  params?: JSONObject;
+  headers?: JSONObject;
   data?: JSONObject;
   pagination?: JSONObject;
-  mappings: JSONObject;
+  mappings?: JSONObject;
 };
