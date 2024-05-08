@@ -7,10 +7,10 @@ export const getPaginatedData = async (
   pagination: JSONObject,
   initData: JSONObject,
 ) => {
-  const key = pagination.key as string;
-  const sizeKey = pagination.size as string;
-  const cursor = pagination.cursor as string;
-  const target = pagination.target as string;
+  const key = pagination["key"] as string;
+  const sizeKey = pagination["size"] as string;
+  const cursor = pagination["cursor"] as string;
+  const target = pagination["target"] as string;
 
   // Get nextPage id|number (and bump it if necessary)
   let nextPage = getValue(initData, key) as string;

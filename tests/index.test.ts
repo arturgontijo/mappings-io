@@ -1,11 +1,11 @@
 import { call } from "@/api/call";
 import { getOneMapping } from "./data/load";
 import { MappingsT } from "@/types/generics";
-import { describe, expect, it } from "@jest/globals";
 
 import express, { Request, Response } from "express";
 import { Server } from "http";
 import BodyParser from "body-parser";
+import { run } from "@/run";
 
 const PORT = 4444;
 const API_URL = `http://0.0.0.0:${PORT}/api/v1`;
@@ -28,7 +28,7 @@ describe("Setting API Server up...", () => {
           { id: 1, status: "refunded", product: "chair", price: "40.75" },
           { id: 2, status: "canceled", product: "television", price: "749.99" },
           { id: 3, status: "approved", product: "laptop", price: "1,250.00" },
-        ].filter((item) => item.status === query.status),
+        ].filter((item) => item.status === query["status"]),
       );
     });
     server = app.listen(PORT, done);
@@ -50,6 +50,22 @@ describe("Setting API Server up...", () => {
         mappings: {},
       };
       const data = await call(m);
+      expect(data).toEqual(true);
+    });
+  });
+
+  describe("API(get) - get() /status2", () => {
+    it("return a GET response from an endpoint in a mappings JSON file", async () => {
+      const m: MappingsT = {
+        id: "test",
+        url: `${API_URL}/status`,
+        params: {},
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mappings: {},
+      };
+      const data = await run(m);
       expect(data).toEqual(true);
     });
   });

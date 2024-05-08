@@ -1,0 +1,9 @@
+src/
+tests/
+node_modules/
+
+tsconfig.json
+tsup.config.ts
+
+jest.config.ts
+eslint.config.js

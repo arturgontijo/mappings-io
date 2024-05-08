@@ -27,7 +27,7 @@ export const transformWithFunction = (data: JSONObject, specs: JSONObject) => {
   let funcParams: JSONValues = [];
   for (const p of params) {
     // Check if p is a key from data or just a constant
-    if (typeof p === "string" && data[p.split(".")[0]]) {
+    if (typeof p === "string" && data[p.split(".")[0]!]) {
       const values = getValue(data, p);
       if (Array.isArray(values)) {
         funcParams = funcParams.concat(...values);
@@ -48,7 +48,7 @@ export const transformDataWithMapping = (
   const final: JSONObject = {};
 
   // Nothing to do here...
-  if (!mappings) return data;
+  if (!mappings || Object.keys(mappings).length === 0) return data;
 
   for (let key of Object.keys(mappings)) {
     let target = "";

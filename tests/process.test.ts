@@ -1,5 +1,4 @@
 import { transformDataWithMapping } from "@/process";
-import { describe, expect, it } from "@jest/globals";
 import { MappingsT } from "@/types/generics";
 import { getOneMapping } from "./data/load";
 import { SHOPIFY_ORDERS_DATA, STRIPE_PAYMENT_INTENTS_DATA } from "./data";

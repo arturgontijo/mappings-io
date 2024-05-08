@@ -1,5 +1,4 @@
 import { getOneMapping } from "./data/load";
-import { describe, expect, it } from "@jest/globals";
 
 describe("Mappings(Load) - getOneMapping()", () => {
   it("return one mappings object from a json file", async () => {
