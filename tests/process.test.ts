@@ -1,8 +1,11 @@
 import { transformDataWithMapping } from "@/process";
 import { MappingsT } from "@/types/generics";
 import { getOneMapping } from "./data/load";
-import { SHOPIFY_ORDERS_DATA, STRIPE_PAYMENT_INTENTS_DATA } from "./data";
-import { META_ADS_CAMPAIGNS_DATA } from "./data/meta-ads-campaigns";
+import {
+  META_ADS_CAMPAIGNS_DATA,
+  SHOPIFY_ORDERS_DATA,
+  STRIPE_PAYMENT_INTENTS_DATA,
+} from "./data";
 
 describe("Mappings(Process) - transformDataWithMapping(shopify-orders)", () => {
   it("return an xform object of a given data and target", async () => {

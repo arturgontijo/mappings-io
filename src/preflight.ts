@@ -6,7 +6,7 @@ export const preflight = async (
 ): Promise<MappingsT> => {
   let m = JSON.stringify(mappings);
   if (m) {
-    replacer.forEach((tag, value) => {
+    replacer.forEach((value, tag) => {
       if (value !== undefined) {
         m = m.replace(tag, value);
       }

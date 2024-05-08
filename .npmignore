@@ -6,4 +6,4 @@ tsconfig.json
 tsup.config.ts
 
 jest.config.ts
-eslint.config.js
+eslint.config.mjs

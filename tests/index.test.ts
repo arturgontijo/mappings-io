@@ -21,6 +21,9 @@ describe("Setting API Server up...", () => {
     });
 
     app.get("/api/v1/orders", async (req: Request, res: Response) => {
+      if (req.headers.authorization === "superSecretToken") {
+        return res.send({ valid: true });
+      }
       const { query } = req;
       res.send(
         [
@@ -31,6 +34,7 @@ describe("Setting API Server up...", () => {
         ].filter((item) => item.status === query["status"]),
       );
     });
+
     server = app.listen(PORT, done);
   });
 
@@ -38,7 +42,7 @@ describe("Setting API Server up...", () => {
     return server && server.close();
   });
 
-  describe("API(get) - get() /status", () => {
+  describe("API(get) - get() /status with call()", () => {
     it("return a GET response from an endpoint in a mappings JSON file", async () => {
       const m: MappingsT = {
         id: "test",
@@ -54,7 +58,7 @@ describe("Setting API Server up...", () => {
     });
   });
 
-  describe("API(get) - get() /status2", () => {
+  describe("API(get) - get() /status with run()", () => {
     it("return a GET response from an endpoint in a mappings JSON file", async () => {
       const m: MappingsT = {
         id: "test",
@@ -89,6 +93,15 @@ describe("Setting API Server up...", () => {
       const m: MappingsT = await getOneMapping("mock-local-orders");
       const data = await call(m);
       expect(data).toHaveLength(2);
+    });
+  });
+
+  describe("API(get) - get() /validate with run() and replacer", () => {
+    it("return a GET response from an endpoint in a mappings JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-local-orders");
+      const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
+      const data = await run(m, replacer);
+      expect(data).toEqual({ valid: true });
     });
   });
 
