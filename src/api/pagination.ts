@@ -42,7 +42,6 @@ export const getPaginatedData = async (
       } else if (Object.keys(targetData as JSONObject).length > 0)
         allData.push(targetData);
       else break;
-      // console.log(`[getPaginatedData] -> nextPage: ${nextPage} | status: ${rNext.status} | data: ${allData.length}`)
       nextPage = getValue(data, key) as string;
       if (nextPage && nextPage.toString() === lastPage.toString()) {
         nextPage = (parseInt(nextPage) + 1).toString();

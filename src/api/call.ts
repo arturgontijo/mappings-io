@@ -10,19 +10,11 @@ export const call = async (m: MappingsT) => {
     headers: m.headers as AxiosHeaders,
     data: m.data,
   };
-
   let data: JSONObject = {};
-  try {
-    const r = await axios(config);
-    if (r.status === 200) {
-      data = r.data;
-      if (m.pagination) {
-        data = await getPaginatedData(config, m.pagination, data);
-      }
-    }
-  } catch (e) {
-    console.log(`[ERROR][${config.method}] api::call(url=${m.url}) -> ${e}`);
+  const r = await axios(config);
+  data = r.data;
+  if (data && m.pagination) {
+    data = await getPaginatedData(config, m.pagination, data);
   }
-
   return data;
 };

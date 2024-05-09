@@ -43,7 +43,7 @@ describe("Setting API Server up...", () => {
   });
 
   describe("API(get) - get() /status with call()", () => {
-    it("return a GET response from an endpoint in a mappings JSON file", async () => {
+    it("return a GET response from an endpoint of a mapping", async () => {
       const m: MappingsT = {
         id: "test",
         url: `${API_URL}/status`,
@@ -59,7 +59,7 @@ describe("Setting API Server up...", () => {
   });
 
   describe("API(get) - get() /status with run()", () => {
-    it("return a GET response from an endpoint in a mappings JSON file", async () => {
+    it("return a GET response from an endpoint of a mapping", async () => {
       const m: MappingsT = {
         id: "test",
         url: `${API_URL}/status`,
@@ -75,7 +75,7 @@ describe("Setting API Server up...", () => {
   });
 
   describe("API(get) - get(refunded) /orders", () => {
-    it("return a GET response from an endpoint in a mappings JSON file", async () => {
+    it("return a GET response from an endpoint of a mapping", async () => {
       const m: MappingsT = {
         id: "test",
         url: `${API_URL}/orders`,
@@ -89,7 +89,7 @@ describe("Setting API Server up...", () => {
   });
 
   describe("API(get) - get(mock-local-orders) /orders", () => {
-    it("return a GET response from an endpoint in a mappings JSON file", async () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
       const m: MappingsT = await getOneMapping("mock-local-orders");
       const data = await call(m);
       expect(data).toHaveLength(2);
@@ -97,7 +97,7 @@ describe("Setting API Server up...", () => {
   });
 
   describe("API(get) - get() /validate with run() and replacer", () => {
-    it("return a GET response from an endpoint in a mappings JSON file", async () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
       const m: MappingsT = await getOneMapping("mock-local-orders");
       const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
       const data = await run(m, replacer);
@@ -106,7 +106,7 @@ describe("Setting API Server up...", () => {
   });
 
   describe("API(get) - get(canceled) /orders", () => {
-    it("return a GET response from an endpoint in a mappings JSON file filtering by canceled", async () => {
+    it("return a GET response from an endpoint of a mapping filtering by canceled", async () => {
       const m: MappingsT = {
         id: "test",
         url: `${API_URL}/orders`,
@@ -116,6 +116,27 @@ describe("Setting API Server up...", () => {
       };
       const data = await call(m);
       expect(data).toHaveLength(1);
+    });
+  });
+
+  describe("API(get) - get() invalid endpoint with call()", () => {
+    it("return a GET response from an endpoint of a mapping", async () => {
+      const m: MappingsT = {
+        id: "test",
+        url: `${API_URL}/invalid`,
+        params: {},
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mappings: {},
+      };
+      await call(m)
+        .then()
+        .catch((e) => {
+          expect(e.toString()).toEqual(
+            "AxiosError: Request failed with status code 404",
+          );
+        });
     });
   });
 });
