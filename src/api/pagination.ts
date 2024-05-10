@@ -31,26 +31,31 @@ export const getPaginatedData = async (
   while (nextPage) {
     await new Promise((r) => setTimeout(r, 250));
     config.params[cursor] = nextPage;
-    const rNext = await axios(config);
-    if (rNext.status === 200) {
-      const data = rNext.data as JSONObject;
-      const targetData = data[target];
-      // Check if there is more data
-      if (Array.isArray(targetData)) {
-        if (targetData.length > 0) allData = allData.concat(targetData);
+    try {
+      const rNext = await axios(config);
+      if (rNext.status === 200) {
+        const data = rNext.data as JSONObject;
+        const targetData = data[target];
+        if (targetData === undefined) break;
+        // Check if there is more data
+        if (Array.isArray(targetData)) {
+          if (targetData.length > 0) allData = allData.concat(targetData);
+          else break;
+        } else if (Object.keys(targetData as JSONObject).length > 0)
+          allData.push(targetData);
         else break;
-      } else if (Object.keys(targetData as JSONObject).length > 0)
-        allData.push(targetData);
-      else break;
-      nextPage = getValue(data, key) as string;
-      if (nextPage && nextPage.toString() === lastPage.toString()) {
-        nextPage = (parseInt(nextPage) + 1).toString();
+        nextPage = getValue(data, key) as string;
+        if (nextPage && nextPage.toString() === lastPage.toString()) {
+          nextPage = (parseInt(nextPage) + 1).toString();
+        }
+        lastPage = nextPage;
+      } else {
+        break;
       }
-      lastPage = nextPage;
-    } else {
+      if (size && allData.length >= size) break;
+    } catch {
       break;
     }
-    if (size && allData.length >= size) break;
   }
   const final: JSONObject = { [target]: allData };
   return final;

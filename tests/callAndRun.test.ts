@@ -6,6 +6,14 @@ import express, { Request, Response } from "express";
 import { Server } from "http";
 import BodyParser from "body-parser";
 import { run } from "@/run";
+import {
+  META_ADS_CAMPAIGNS_DATA,
+  SHOPIFY_ORDERS_DATA,
+  STRIPE_PAYMENT_INTENTS_DATA,
+  MOCK_PAGINATED_DATA_PAG_1,
+  MOCK_PAGINATED_DATA_PAG_2,
+  MOCK_PAGINATED_DATA_PAG_3,
+} from "./data";
 
 const PORT = 4444;
 const API_URL = `http://0.0.0.0:${PORT}/api/v1`;
@@ -33,6 +41,29 @@ describe("Setting API Server up...", () => {
           { id: 3, status: "approved", product: "laptop", price: "1,250.00" },
         ].filter((item) => item.status === query["status"]),
       );
+    });
+
+    app.get("/api/v1/meta/:campainId", async (_req: Request, res: Response) => {
+      res.send(META_ADS_CAMPAIGNS_DATA);
+    });
+
+    app.get("/api/v1/shopify/orders", async (_req: Request, res: Response) => {
+      res.send(SHOPIFY_ORDERS_DATA);
+    });
+
+    app.get(
+      "/api/v1/stripe/payment_intents",
+      async (_req: Request, res: Response) => {
+        res.send(STRIPE_PAYMENT_INTENTS_DATA);
+      },
+    );
+
+    app.get("/api/v1/pages", async (req: Request, res: Response) => {
+      const { page } = req.query;
+      if (!page) return res.send(MOCK_PAGINATED_DATA_PAG_1);
+      if (page === "2") return res.send(MOCK_PAGINATED_DATA_PAG_2);
+      if (page === "3") return res.send(MOCK_PAGINATED_DATA_PAG_3);
+      if (parseInt(page.toString() || "4") > 3) return res.status(404).send({});
     });
 
     server = app.listen(PORT, done);
@@ -137,6 +168,68 @@ describe("Setting API Server up...", () => {
             "AxiosError: Request failed with status code 404",
           );
         });
+    });
+  });
+
+  describe("API(get) - get() MetaAds /campaigns with run() and replacer", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-meta-ads-campaigns");
+      const replacer = new Map([
+        ["<ACCESS_TOKEN>", "superSecretToken"],
+        ["<API_VERSION>", "api/v1/meta"],
+        ["<CAMPAIGN_ID>", "6042147342661"],
+      ]);
+      const data = await run(m, replacer);
+      expect(data).toEqual({
+        campaigns: {
+          campaignId: "6042147342661",
+          campaignStatus: "ACTIVE",
+        },
+      });
+    });
+  });
+
+  describe("API(get) - get() Shopify /orders with run() and replacer", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-shopify-orders-function");
+      m.url = `${API_URL}/shopify/orders`;
+      const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
+      const data = await run(m, replacer);
+      expect(data).toEqual({
+        functions: {
+          dates: [1199980800000, 1202659200000],
+          tax: "23.88",
+          total: "1197.88",
+        },
+      });
+    });
+  });
+
+  describe("API(get) - get() Stripe /payment_intents with run() and replacer", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-stripe-no-xforms");
+      m.url = `${API_URL}/stripe/payment_intents`;
+      const replacer = new Map([
+        ["<USERNAME>", "user"],
+        ["<PASSWORD>", "pass"],
+      ]);
+      const data = await run(m, replacer);
+      expect(data).toEqual({
+        sales: STRIPE_PAYMENT_INTENTS_DATA.data,
+      });
+    });
+  });
+
+  describe("API(get) - get() local paginated /pages with run() and replacer", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-local-paginated");
+      const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
+      let targetData = MOCK_PAGINATED_DATA_PAG_1.data;
+      targetData = targetData.concat(MOCK_PAGINATED_DATA_PAG_2.data);
+      targetData = targetData.concat(MOCK_PAGINATED_DATA_PAG_3.data);
+      await run(m, replacer)
+        .then((data) => expect(data).toEqual({ sales: targetData }))
+        .catch((e) => expect(e).toBeUndefined());
     });
   });
 });

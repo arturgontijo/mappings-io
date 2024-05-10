@@ -1,0 +1,19 @@
+{
+  "id": "mock-meta-ads-campaigns",
+  "url": "http://0.0.0.0:4444/<API_VERSION>/<CAMPAIGN_ID>",
+  "params": {
+    "fields": "id,name,effective_status,start_time,stop_time,insights{spend,impressions,clicks,reach,cpm,cpc}",
+    "access_token": "<ACCESS_TOKEN>"
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "mappings": {
+    "campaigns": {
+      "-xforms": {
+        "campaignId": "id",
+        "campaignStatus": "effective_status"
+      }
+    }
+  }
+}
