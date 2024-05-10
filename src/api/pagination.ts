@@ -6,7 +6,7 @@ export const getPaginatedData = async (
   config: AxiosRequestConfig,
   pagination: JSONObject,
   initData: JSONObject,
-) => {
+): Promise<JSONObject> => {
   const key = pagination["key"] as string;
   const sizeKey = pagination["size"] as string;
   const cursor = pagination["cursor"] as string;
@@ -30,33 +30,31 @@ export const getPaginatedData = async (
 
   while (nextPage) {
     await new Promise((r) => setTimeout(r, 250));
-    config.params[cursor] = nextPage;
+
+    if (cursor === "-link") config.url = nextPage;
+    else config.params[cursor] = nextPage;
+
     try {
       const rNext = await axios(config);
-      if (rNext.status === 200) {
-        const data = rNext.data as JSONObject;
-        const targetData = data[target];
-        if (targetData === undefined) break;
-        // Check if there is more data
-        if (Array.isArray(targetData)) {
-          if (targetData.length > 0) allData = allData.concat(targetData);
-          else break;
-        } else if (Object.keys(targetData as JSONObject).length > 0)
-          allData.push(targetData);
+      const data = rNext.data as JSONObject;
+      const targetData = data[target];
+      if (targetData === undefined) break;
+      // Check if there is more data
+      if (Array.isArray(targetData)) {
+        if (targetData.length > 0) allData = allData.concat(targetData);
         else break;
-        nextPage = getValue(data, key) as string;
-        if (nextPage && nextPage.toString() === lastPage.toString()) {
-          nextPage = (parseInt(nextPage) + 1).toString();
-        }
-        lastPage = nextPage;
-      } else {
-        break;
+      } else if (Object.keys(targetData as JSONObject).length > 0)
+        allData.push(targetData);
+      else break;
+      nextPage = getValue(data, key) as string;
+      if (nextPage && nextPage.toString() === lastPage.toString()) {
+        nextPage = (parseInt(nextPage) + 1).toString();
       }
+      lastPage = nextPage;
       if (size && allData.length >= size) break;
     } catch {
       break;
     }
   }
-  const final: JSONObject = { [target]: allData };
-  return final;
+  return { [target]: allData };
 };

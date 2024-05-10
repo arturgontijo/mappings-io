@@ -5,6 +5,11 @@ import {
   MOCK_PAGINATED_DATA_PAG_2,
   MOCK_PAGINATED_DATA_PAG_3,
 } from "./mock-paginated-data";
+import {
+  MOCK_PAGINATED_LINK_DATA_PAG_1,
+  MOCK_PAGINATED_LINK_DATA_PAG_2,
+  MOCK_PAGINATED_LINK_DATA_PAG_3,
+} from "./mock-paginated-link-data";
 import { SHOPIFY_ORDERS_DATA } from "./shopify-orders";
 import { STRIPE_PAYMENT_INTENTS_DATA } from "./stripe-payment-intents";
 
@@ -17,4 +22,7 @@ export {
   MOCK_PAGINATED_DATA_PAG_1,
   MOCK_PAGINATED_DATA_PAG_2,
   MOCK_PAGINATED_DATA_PAG_3,
+  MOCK_PAGINATED_LINK_DATA_PAG_1,
+  MOCK_PAGINATED_LINK_DATA_PAG_2,
+  MOCK_PAGINATED_LINK_DATA_PAG_3,
 };

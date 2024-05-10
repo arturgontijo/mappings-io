@@ -1,0 +1,19 @@
+{
+  "id": "mock-local-paginated-link",
+  "url": "http://0.0.0.0:4444/api/v1/page-1",
+  "params": {
+    "status": "approved"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "<ACCESS_TOKEN>"
+  },
+  "pagination": {
+    "key": "paging.cursors.after",
+    "cursor": "-link",
+    "target": "data"
+  },
+  "mappings": {
+    "sales": "data"
+  }
+}

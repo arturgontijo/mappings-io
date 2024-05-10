@@ -1,4 +1,4 @@
-export const MOCK_PAGINATED_DATA_PAG_1 = {
+export const MOCK_PAGINATED_LINK_DATA_PAG_1 = {
   data: [
     {
       id: 1,
@@ -25,12 +25,12 @@ export const MOCK_PAGINATED_DATA_PAG_1 = {
   paging: {
     cursors: {
       before: null,
-      after: 2,
+      after: "http://0.0.0.0:4444/api/v1/page-2",
     },
   },
 };
 
-export const MOCK_PAGINATED_DATA_PAG_2 = {
+export const MOCK_PAGINATED_LINK_DATA_PAG_2 = {
   data: [
     {
       id: 4,
@@ -49,13 +49,13 @@ export const MOCK_PAGINATED_DATA_PAG_2 = {
   ],
   paging: {
     cursors: {
-      before: 1,
-      after: 3,
+      before: "http://0.0.0.0:4444/api/v1/pages",
+      after: "http://0.0.0.0:4444/api/v1/page-3",
     },
   },
 };
 
-export const MOCK_PAGINATED_DATA_PAG_3 = {
+export const MOCK_PAGINATED_LINK_DATA_PAG_3 = {
   data: [
     {
       id: 6,
@@ -95,7 +95,7 @@ export const MOCK_PAGINATED_DATA_PAG_3 = {
   ],
   paging: {
     cursors: {
-      before: 2,
+      before: "http://0.0.0.0:4444/api/v1/page-2",
       after: null,
     },
   },
