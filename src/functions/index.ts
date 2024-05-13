@@ -1,6 +1,7 @@
 import { JSONValues } from "@/types/generics";
-import { fSum, fDiv } from "./arithmetics";
+import { fSum, fDiv, fMul } from "./arithmetics";
 import { fDateTsTz, fDateTzTs } from "./dates";
+import { fConst } from "./misc";
 
 /**
  * Processors for the mappings -- runs on every :: encountered on the mapping
@@ -20,10 +21,14 @@ export const applyFunction = (
       return fSum(params);
     case "Div":
       return fDiv(params);
+    case "Mul":
+      return fMul(params);
     case "DateTsTz":
       return fDateTsTz(params);
     case "DateTzTs":
       return fDateTzTs(params);
+    case "Const":
+      return fConst(params);
     default:
   }
   return "";

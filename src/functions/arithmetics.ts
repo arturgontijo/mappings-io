@@ -17,3 +17,12 @@ export const fDiv = (params: string[]): JSONValues => {
   }
   return result.toFixed(2);
 };
+
+// ::total = ['Mull', [3, 4, 5]] -> { "total": 60 }
+export const fMul = (params: string[]): JSONValues => {
+  let result = 1;
+  for (const item of params) {
+    result *= parseFloat(item);
+  }
+  return result.toFixed(2);
+};
