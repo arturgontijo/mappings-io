@@ -127,6 +127,49 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-function)", () =>
   });
 });
 
+describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", () => {
+  it("return an xform object of a given data and target", async () => {
+    const m: MappingsT = {
+      id: "nexted",
+      url: "",
+      mappings: {
+        data: {
+          "-target": "orders",
+          "-xforms": {
+            customer: {
+              "-target": "customer",
+              "-xforms": {
+                "::name": ["Concat", ["first_name", "last_name"]],
+                email: "email",
+                phone: "phone",
+              },
+            },
+          },
+        },
+      },
+    };
+    const data = transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
+    expect(data).toEqual({
+      data: [
+        {
+          customer: {
+            name: "Alice Norman",
+            email: "alice.norman@mail.example.com",
+            phone: "+16136120707",
+          },
+        },
+        {
+          customer: {
+            name: "Bob Norman",
+            email: "bob.norman@mail.example.com",
+            phone: "+16136120707",
+          },
+        },
+      ],
+    });
+  });
+});
+
 describe("Mappings(Process) - transformDataWithMapping(stripe-payment-intents)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("stripe-payment-intents");
