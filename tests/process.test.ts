@@ -137,11 +137,19 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
           "-target": "orders",
           "-xforms": {
             customer: {
-              "-target": "customer",
               "-xforms": {
-                "::name": ["Concat", ["first_name", "last_name"]],
-                email: "email",
-                phone: "phone",
+                "::name": [
+                  "Concat",
+                  ["customer.first_name", "customer.last_name"],
+                ],
+                email: "customer.email",
+                phone: "customer.phone",
+                browser: {
+                  "-xforms": {
+                    ip: "client_details.browser_ip",
+                    userAgent: "client_details.user_agent",
+                  },
+                },
               },
             },
           },
@@ -156,6 +164,10 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
             name: "Alice Norman",
             email: "alice.norman@mail.example.com",
             phone: "+16136120707",
+            browser: {
+              ip: "0.0.0.0",
+              userAgent: "Mozilla/5.0 (Linux)",
+            },
           },
         },
         {
@@ -163,6 +175,10 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
             name: "Bob Norman",
             email: "bob.norman@mail.example.com",
             phone: "+16136120707",
+            browser: {
+              ip: "0.0.0.0",
+              userAgent: "Mozilla/5.0 (iPhone)",
+            },
           },
         },
       ],
