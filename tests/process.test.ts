@@ -221,40 +221,67 @@ describe("Mappings(Process) - transformDataWithMapping(facebook)", () => {
       },
     });
   });
+});
 
-  describe("Mappings(Process) - transformDataWithMapping(Mul and Const)", () => {
-    it("return an xform object of a given data and target", async () => {
-      const m: MappingsT = {
-        id: "mul-and-const",
-        url: "",
-        mappings: {
-          data: {
-            "-xforms": {
-              "::multiply": ["Mul", [5, 6, 7]],
-              "::multiplyAgain": ["Mul", [8, 1]],
-              "::constantOne": ["Const", ["TestOne"]],
-              "::constantTwo": ["Const", ["TestTwo", 3, 4]],
-              "::constantThree": [
-                "Const",
-                ["TestFive", "TestSix", [1, 2], { status: true }],
-              ],
-            },
+describe("Mappings(Process) - transformDataWithMapping(Mul and Const)", () => {
+  it("return an xform object of a given data and target", async () => {
+    const m: MappingsT = {
+      id: "mul-and-const",
+      url: "",
+      mappings: {
+        data: {
+          "-xforms": {
+            "::multiply": ["Mul", [5, 6, 7]],
+            "::multiplyAgain": ["Mul", [8, 1]],
+            "::constantOne": ["Const", ["TestOne"]],
+            "::constantTwo": ["Const", ["TestTwo", 3, 4]],
+            "::constantThree": [
+              "Const",
+              ["TestFive", "TestSix", [1, 2], { status: true }],
+            ],
           },
         },
-      };
-      const data = transformDataWithMapping(
-        STRIPE_PAYMENT_INTENTS_DATA,
-        m.mappings,
-      );
-      expect(data).toEqual({
-        data: {
-          multiply: "210.00",
-          multiplyAgain: "8.00",
-          constantOne: "TestOne",
-          constantTwo: ["TestTwo", 3, 4],
-          constantThree: ["TestFive", "TestSix", [1, 2], { status: true }],
-        },
-      });
+      },
+    };
+    const data = transformDataWithMapping(
+      STRIPE_PAYMENT_INTENTS_DATA,
+      m.mappings,
+    );
+    expect(data).toEqual({
+      data: {
+        multiply: "210.00",
+        multiplyAgain: "8.00",
+        constantOne: "TestOne",
+        constantTwo: ["TestTwo", 3, 4],
+        constantThree: ["TestFive", "TestSix", [1, 2], { status: true }],
+      },
     });
+  });
+});
+
+describe("Mappings(Process) - transformDataWithMapping(non-existing-target)", () => {
+  it("return an xform object of a given data and target", async () => {
+    const mockData = { data: { status: true } };
+    const m: MappingsT = {
+      id: "non-existing-target",
+      url: "",
+      mappings: {
+        data: "field",
+      },
+    };
+    let data = transformDataWithMapping(mockData, m.mappings);
+    expect(data).toEqual({ data: undefined });
+
+    m.mappings = {
+      data: "field.subfield",
+    };
+    data = transformDataWithMapping(mockData, m.mappings);
+    expect(data).toEqual({ data: undefined });
+
+    m.mappings = {
+      data: "field.subfield.subsubfield.subsubsubfield",
+    };
+    data = transformDataWithMapping(mockData, m.mappings);
+    expect(data).toEqual({ data: undefined });
   });
 });

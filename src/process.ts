@@ -17,6 +17,7 @@ export const getValue = (data: JSONValues, _target: string): JSONValues => {
       return innerData;
     }
     currData = currData[target] as JSONObject;
+    if (currData === undefined) break;
   }
   return currData;
 };
