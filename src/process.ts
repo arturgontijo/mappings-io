@@ -2,7 +2,7 @@ import { JSONValues, JSONObject } from "@/types/generics";
 import { applyFunction } from "@/functions";
 
 export const getValue = (data: JSONValues, _target: string): JSONValues => {
-  if (data === undefined) return;
+  if (data == undefined) return;
   const targets = _target.split(".");
   let remainingFields = _target;
   let currData = data as JSONObject;
@@ -61,8 +61,8 @@ export const transformDataWithMapping = (
       xforms = (value["-xforms"] as JSONObject) || {};
     }
     const targetData = (target ? getValue(data, target) : data) as JSONObject;
-    if (targetData === undefined) {
-      final[key] = undefined;
+    if (targetData == undefined) {
+      final[key] = targetData;
       continue;
     }
     if (key.startsWith("::")) {
