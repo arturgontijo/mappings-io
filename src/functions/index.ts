@@ -1,7 +1,7 @@
 import { JSONValues } from "@/types/generics";
 import { fSum, fDiv, fMul } from "./arithmetics";
 import { fDateTsTz, fDateTzTs } from "./dates";
-import { fConcat, fConst } from "./misc";
+import { fConcat, fConst, fSubString } from "./misc";
 
 /**
  * Processors for the mappings -- runs on every :: encountered on the mapping
@@ -31,6 +31,8 @@ export const applyFunction = (
       return fConst(params);
     case "Concat":
       return fConcat(params);
+    case "SubString":
+      return fSubString(params);
     default:
   }
   return "";

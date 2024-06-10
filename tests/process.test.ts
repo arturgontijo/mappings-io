@@ -140,7 +140,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
               "-xforms": {
                 "::name": [
                   "Concat",
-                  ["customer.first_name", "customer.last_name"],
+                  ["customer.first_name", " ", "customer.last_name"],
                 ],
                 email: "customer.email",
                 phone: "customer.phone",
@@ -296,6 +296,9 @@ describe("Mappings(Process) - transformDataWithMapping(Mul and Const)", () => {
               "Const",
               ["TestFive", "TestSix", [1, 2], { status: true }],
             ],
+            "::subStringOne": ["SubString", ["OneTest", 3]],
+            "::subStringTwo": ["SubString", ["TestTwo", -3]],
+            "::subStringThree": ["SubString", ["Three", 10]],
           },
         },
       },
@@ -311,6 +314,9 @@ describe("Mappings(Process) - transformDataWithMapping(Mul and Const)", () => {
         constantOne: "TestOne",
         constantTwo: ["TestTwo", 3, 4],
         constantThree: ["TestFive", "TestSix", [1, 2], { status: true }],
+        subStringOne: "One",
+        subStringTwo: "Two",
+        subStringThree: "Three",
       },
     });
   });
