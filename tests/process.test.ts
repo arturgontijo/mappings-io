@@ -106,8 +106,10 @@ describe("Mappings(Process) - transformDataWithMapping(functions)", () => {
         sumStr: "6.00",
         sum: "0.00",
         div: "5.00",
-        dateTzTs: [1711977010000, 1714039627000],
-        dateTsTz: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
+        dateTzTs1: [1711977010000, 1714039627000],
+        dateTzTs2: [1711977010000, 1714039627000],
+        dateTsTz1: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
+        dateTsTz2: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
       },
     });
   });
@@ -123,6 +125,20 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-function)", () =>
         tax: "23.88",
         dates: [1199980800000, 1202659200000],
       },
+      newFunctions: [
+        {
+          ip1: "0.0.0.1",
+          ip2: "0.0.0.1",
+          ip3: "0.0.0.1",
+          ip4: "0.0.0.1",
+        },
+        {
+          ip1: null,
+          ip2: "127.0.0.1",
+          ip3: "0.0.0.2",
+          ip4: "0.0.0.2",
+        },
+      ],
     });
   });
 });
@@ -166,7 +182,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
             email: "alice.norman@mail.example.com",
             phone: "+16136120707",
             browser: {
-              ip: "0.0.0.0",
+              ip: "0.0.0.1",
               userAgent: "Mozilla/5.0 (Linux)",
             },
           },

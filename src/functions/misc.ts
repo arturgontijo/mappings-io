@@ -26,3 +26,15 @@ export const fSubString = (params: string[]): JSONValues => {
   }
   return params[0];
 };
+
+// { "exists": "value" }
+// ::data = ["Or", ["nonExisting1", "nonExisting2", "exists"]] -> { "data": "value" }
+export const fOr = (params: string[]): JSONValues => {
+  let value: JSONValues = undefined;
+  for (const item of params) {
+    if (item == undefined) continue;
+    value = item;
+    break;
+  }
+  return value;
+};

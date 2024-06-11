@@ -16,6 +16,15 @@
         "::tax": ["Sum", ["orders.total_tax"]],
         "::dates": ["DateTzTs", ["orders.created_at"]]
       }
+    },
+    "newFunctions": {
+      "-target": "orders",
+      "-xforms": {
+        "ip1": "client_details.browser_ip",
+        "::ip2": ["Or", ["client_details.browser_ip", "{127.0.0.1}"]],
+        "ip3": "browser_ip",
+        "::ip4": ["Or", ["client_details.browser_ip", "browser_ip"]]
+      }
     }
   }
 }

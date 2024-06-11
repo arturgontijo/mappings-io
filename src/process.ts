@@ -28,16 +28,24 @@ export const transformWithFunction = (data: JSONObject, specs: JSONObject) => {
   let funcParams: JSONValues = [];
   for (const p of params) {
     // Check if p is a key from data or just a constant
-    if (typeof p === "string" && data[p.split(".")[0]!]) {
-      const values = getValue(data, p);
-      if (Array.isArray(values)) {
-        funcParams = funcParams.concat(...values);
-      } else {
-        funcParams.push(values);
+    if (typeof p === "string") {
+      // {VALUE} -> constant
+      if (p.includes("{")) {
+        const c = p.replace("{", "").replace("}", "");
+        funcParams.push(c);
+        continue;
       }
-    } else {
-      funcParams.push(p);
+      if (data[p.split(".")[0]!] || p.split(".").length > 1) {
+        const values = getValue(data, p);
+        if (Array.isArray(values)) {
+          funcParams = funcParams.concat(...values);
+        } else {
+          funcParams.push(values);
+        }
+        continue;
+      }
     }
+    funcParams.push(p);
   }
   return applyFunction(func, funcParams);
 };
