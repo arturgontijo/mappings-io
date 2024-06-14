@@ -2,9 +2,18 @@ import { JSONValues } from "@/types/generics";
 
 // ::total = ['Sum', [1, 2, 3]] -> { "total": 6 }
 export const fSum = (params: string[]): JSONValues => {
-  let result = 0;
-  for (const item of params) {
+  let result = parseFloat(params[0]!);
+  for (const item of params.slice(1)) {
     result += parseFloat(item);
+  }
+  return result.toFixed(2);
+};
+
+// ::total = ['Sub', [1, 2, 3]] -> { "total": -4 }
+export const fSub = (params: string[]): JSONValues => {
+  let result = parseFloat(params[0]!);
+  for (const item of params.slice(1)) {
+    result -= parseFloat(item);
   }
   return result.toFixed(2);
 };
@@ -20,8 +29,8 @@ export const fDiv = (params: string[]): JSONValues => {
 
 // ::total = ['Mull', [3, 4, 5]] -> { "total": 60 }
 export const fMul = (params: string[]): JSONValues => {
-  let result = 1;
-  for (const item of params) {
+  let result = parseFloat(params[0]!);
+  for (const item of params.slice(1)) {
     result *= parseFloat(item);
   }
   return result.toFixed(2);

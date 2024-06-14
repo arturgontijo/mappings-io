@@ -3,6 +3,7 @@ import { applyFunction } from "@/functions";
 
 export const getValue = (data: JSONValues, _target: string): JSONValues => {
   if (data == undefined) return;
+  if (_target == undefined) return;
   const targets = _target.split(".");
   let remainingFields = _target;
   let currData = data as JSONObject;
@@ -89,7 +90,15 @@ export const transformDataWithMapping = (
     } else {
       const subtarget = mappings[key];
       if (Array.isArray(subtarget)) {
-        finalValue = [getValue(targetData, subtarget[0] as string)];
+        const innerData = [];
+        for (const st of subtarget) {
+          if (typeof st === "object")
+            innerData.push(
+              transformDataWithMapping(targetData, st as JSONObject),
+            );
+          else innerData.push(getValue(targetData, st as string));
+        }
+        finalValue = innerData;
       } else {
         finalValue = getValue(targetData, subtarget as string);
       }

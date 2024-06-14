@@ -105,11 +105,17 @@ describe("Mappings(Process) - transformDataWithMapping(functions)", () => {
         sumInt: "6.00",
         sumStr: "6.00",
         sum: "0.00",
+        sub: "200.00",
         div: "5.00",
+        mul: "50000.00",
         dateTzTs1: [1711977010000, 1714039627000],
         dateTzTs2: [1711977010000, 1714039627000],
         dateTsTz1: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
         dateTsTz2: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
+        IntFromStr: 50,
+        IntfromHex: 119,
+        floatFromFloat: "50.50",
+        floatFromStr: "50.123",
       },
     });
   });
@@ -169,6 +175,19 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
                 },
               },
             },
+            customerNameArray: [
+              {
+                customerName1: "customer.first_name",
+              },
+              {
+                customerName2: {
+                  "-xforms": {
+                    name: "customer.first_name",
+                  },
+                },
+              },
+              "customer.first_name",
+            ],
           },
         },
       },
@@ -186,6 +205,11 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
               userAgent: "Mozilla/5.0 (Linux)",
             },
           },
+          customerNameArray: [
+            { customerName1: "Alice" },
+            { customerName2: { name: "Alice" } },
+            "Alice",
+          ],
         },
         {
           customer: {
@@ -194,6 +218,11 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
             phone: "+16136120707",
             browser: null,
           },
+          customerNameArray: [
+            { customerName1: "Bob" },
+            { customerName2: { name: "Bob" } },
+            "Bob",
+          ],
         },
       ],
     });

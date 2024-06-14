@@ -1,6 +1,6 @@
 {
   "name": "mappings-io",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Almost no-code API integrations.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -44,7 +44,7 @@
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "tsup": "^8.0.2",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.12.0"
   },

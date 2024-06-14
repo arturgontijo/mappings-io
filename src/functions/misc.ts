@@ -8,7 +8,7 @@ export const fConst = (params: string[]): JSONValues => {
   return params;
 };
 
-// ::name = ["Concant", ["Foo", " ", "Bar"]] -> { "name": "Foo Bar" }
+// ::name = ["Concat", ["Foo", " ", "Bar"]] -> { "name": "Foo Bar" }
 export const fConcat = (params: string[]): JSONValues => {
   // If it is a single element list:
   if (params.length === 1) return params[0];
