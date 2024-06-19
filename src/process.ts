@@ -1,6 +1,18 @@
 import { JSONValues, JSONObject } from "@/types/generics";
 import { applyFunction } from "@/functions";
 
+export const setValue = (obj: JSONObject, path: string, value: JSONValues) => {
+  let schema = obj;
+  const pList = path.split(".");
+  const len = pList.length;
+  for (let i = 0; i < len - 1; i++) {
+    const elem = pList[i];
+    if (!schema[elem]) schema[elem] = {};
+    schema = schema[elem] as JSONObject;
+  }
+  schema[pList[len - 1]] = value;
+};
+
 export const getValue = (data: JSONValues, _target: string): JSONValues => {
   if (data == undefined) return;
   if (_target == undefined) return;

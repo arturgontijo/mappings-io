@@ -1,0 +1,20 @@
+{
+  "id": "mock-local-paginated-nested",
+  "url": "http://0.0.0.0:4444/api/v1/nested-pages",
+  "params": {
+    "status": "approved"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "<ACCESS_TOKEN>"
+  },
+  "pagination": {
+    "key": "response.paging.cursors.after",
+    "size": "response.paging.total",
+    "cursor": "page",
+    "target": "response.data"
+  },
+  "mappings": {
+    "sales": "response.data"
+  }
+}

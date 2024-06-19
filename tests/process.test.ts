@@ -1,5 +1,5 @@
-import { transformDataWithMapping } from "@/process";
-import { MappingsT } from "@/types/generics";
+import { getValue, setValue, transformDataWithMapping } from "@/process";
+import { JSONValues, MappingsT } from "@/types/generics";
 import { getOneMapping } from "./data/load";
 import {
   META_ADS_CAMPAIGNS_DATA,
@@ -395,5 +395,50 @@ describe("Mappings(Process) - transformDataWithMapping(non-existing-target)", ()
     };
     data = transformDataWithMapping(mockData, m.mappings);
     expect(data).toEqual({ data: undefined });
+  });
+});
+
+describe("Mappings(Process) - getValue()", () => {
+  it("return a value of a given data[target]", async () => {
+    const data = {
+      field1: 1,
+      field2: 2,
+      field3: [3, 4, 5],
+      field4: {
+        field4_1: 1,
+        field4_2: 2,
+        field4_3: [3, 4, 5],
+        field4_4: {
+          nested: "nested",
+        },
+      },
+    };
+    let value = getValue(data, "field1");
+    expect(value).toEqual(data.field1);
+    value = getValue(data, "field3") as JSONValues[];
+    expect(value[1]).toEqual(4);
+    value = getValue(data, "field4.field4_4.nested") as string;
+    expect(value).toEqual("nested");
+  });
+});
+
+describe("Mappings(Process) - setValue()", () => {
+  it("sets a value of a given data[target] = value", async () => {
+    const data = {
+      field1: 1,
+      field2: 2,
+      field3: [3, 4, 5],
+      field4: {
+        field4_1: 1,
+        field4_2: 2,
+        field4_3: [3, 4, 5],
+      },
+    };
+    let value = getValue(data, "field5.field5_1");
+    expect(value).toBeUndefined();
+
+    setValue(data, "field5.field5_1", { value: 0 });
+    value = getValue(data, "field5.field5_1");
+    expect(value).toEqual({ value: 0 });
   });
 });

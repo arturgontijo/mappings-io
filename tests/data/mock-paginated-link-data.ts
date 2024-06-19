@@ -49,7 +49,7 @@ export const MOCK_PAGINATED_LINK_DATA_PAG_2 = {
   ],
   paging: {
     cursors: {
-      before: "http://0.0.0.0:4444/api/v1/pages",
+      before: "http://0.0.0.0:4444/api/v1/page-1",
       after: "http://0.0.0.0:4444/api/v1/page-3",
     },
   },

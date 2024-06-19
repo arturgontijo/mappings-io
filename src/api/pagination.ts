@@ -1,5 +1,6 @@
-import { getValue } from "@/process";
+import { getValue, setValue } from "@/process";
 import { JSONObject, JSONValues } from "@/types/generics";
+
 import axios, { AxiosRequestConfig } from "axios";
 
 export const getPaginatedData = async (
@@ -19,13 +20,17 @@ export const getPaginatedData = async (
   }
   let lastPage = nextPage;
 
-  let allData = initData[target] as JSONValues[];
+  const final: JSONObject = {};
+  let allData = getValue(initData, target) as JSONValues[];
 
   // Get pagination size when available
   let size = 0;
   if (sizeKey) {
     size = parseInt((getValue(initData, sizeKey) as string) || "0");
-    if (allData.length >= size) return { [target]: allData };
+    if (allData.length >= size) {
+      setValue(final, target, allData);
+      return final;
+    }
   }
 
   while (nextPage) {
@@ -37,7 +42,7 @@ export const getPaginatedData = async (
     try {
       const rNext = await axios(config);
       const data = rNext.data as JSONObject;
-      const targetData = data[target];
+      const targetData = getValue(data, target);
       if (targetData === undefined) break;
       // Check if there is more data
       if (Array.isArray(targetData)) {
@@ -56,5 +61,6 @@ export const getPaginatedData = async (
       break;
     }
   }
-  return { [target]: allData };
+  setValue(final, target, allData);
+  return final;
 };

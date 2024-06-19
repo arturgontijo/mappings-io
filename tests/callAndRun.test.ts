@@ -16,6 +16,12 @@ import {
   MOCK_PAGINATED_LINK_DATA_PAG_2,
   MOCK_PAGINATED_LINK_DATA_PAG_3,
   MOCK_PAGINATED_LINK_DATA_PAG_1,
+  MOCK_PAGINATED_NESTED_DATA_PAG_1,
+  MOCK_PAGINATED_NESTED_DATA_PAG_2,
+  MOCK_PAGINATED_NESTED_DATA_PAG_3,
+  MOCK_PAGINATED_LINK_NESTED_DATA_PAG_1,
+  MOCK_PAGINATED_LINK_NESTED_DATA_PAG_2,
+  MOCK_PAGINATED_LINK_NESTED_DATA_PAG_3,
 } from "./data";
 
 const PORT = 4444;
@@ -77,6 +83,24 @@ describe("Setting API Server up...", () => {
     });
     app.get("/api/v1/page-3", async (_req: Request, res: Response) => {
       return res.send(MOCK_PAGINATED_LINK_DATA_PAG_3);
+    });
+
+    app.get("/api/v1/nested-pages", async (req: Request, res: Response) => {
+      const { page } = req.query;
+      if (!page) return res.send(MOCK_PAGINATED_NESTED_DATA_PAG_1);
+      if (page === "2") return res.send(MOCK_PAGINATED_NESTED_DATA_PAG_2);
+      if (page === "3") return res.send(MOCK_PAGINATED_NESTED_DATA_PAG_3);
+      if (parseInt(page.toString() || "4") > 3) return res.status(404).send({});
+    });
+
+    app.get("/api/v1/nested-page-1", async (_req: Request, res: Response) => {
+      return res.send(MOCK_PAGINATED_LINK_NESTED_DATA_PAG_1);
+    });
+    app.get("/api/v1/nested-page-2", async (_req: Request, res: Response) => {
+      return res.send(MOCK_PAGINATED_LINK_NESTED_DATA_PAG_2);
+    });
+    app.get("/api/v1/nested-page-3", async (_req: Request, res: Response) => {
+      return res.send(MOCK_PAGINATED_LINK_NESTED_DATA_PAG_3);
     });
 
     server = app.listen(PORT, done);
@@ -268,9 +292,45 @@ describe("Setting API Server up...", () => {
     it("return a GET response from an endpoint in a mapping JSON file", async () => {
       const m: MappingsT = await getOneMapping("mock-local-paginated-link");
       const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
-      let targetData = MOCK_PAGINATED_DATA_PAG_1.data;
-      targetData = targetData.concat(MOCK_PAGINATED_DATA_PAG_2.data);
-      targetData = targetData.concat(MOCK_PAGINATED_DATA_PAG_3.data);
+      let targetData = MOCK_PAGINATED_LINK_DATA_PAG_1.data;
+      targetData = targetData.concat(MOCK_PAGINATED_LINK_DATA_PAG_2.data);
+      targetData = targetData.concat(MOCK_PAGINATED_LINK_DATA_PAG_3.data);
+      await run(m, replacer)
+        .then((data) => expect(data).toEqual({ sales: targetData }))
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(get) - get() local paginated (nested data) /pages with run() and replacer", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-local-paginated-nested");
+      const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
+      let targetData = MOCK_PAGINATED_NESTED_DATA_PAG_1.response.data;
+      targetData = targetData.concat(
+        MOCK_PAGINATED_NESTED_DATA_PAG_2.response.data,
+      );
+      targetData = targetData.concat(
+        MOCK_PAGINATED_NESTED_DATA_PAG_3.response.data,
+      );
+      await run(m, replacer)
+        .then((data) => expect(data).toEqual({ sales: targetData }))
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(get) - get() local paginated (nested data and link cursor) /pages with run() and replacer", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping(
+        "mock-local-paginated-nested-link",
+      );
+      const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
+      let targetData = MOCK_PAGINATED_LINK_NESTED_DATA_PAG_1.response.data;
+      targetData = targetData.concat(
+        MOCK_PAGINATED_LINK_NESTED_DATA_PAG_2.response.data,
+      );
+      targetData = targetData.concat(
+        MOCK_PAGINATED_LINK_NESTED_DATA_PAG_3.response.data,
+      );
       await run(m, replacer)
         .then((data) => expect(data).toEqual({ sales: targetData }))
         .catch((e) => expect(e).toBeUndefined());
