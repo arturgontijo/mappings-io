@@ -4,11 +4,15 @@ import { JSONValues } from "@/types/generics";
 export const fDateTsTz = (params: string[]): JSONValues => {
   let value: JSONValues = [];
   for (const item of params) {
-    let timestamp = parseInt(item);
-    if (timestamp.toString().length <= 10) {
-      timestamp = parseInt(timestamp.toString()) * 1000;
+    try {
+      let timestamp = parseInt(item);
+      if (timestamp.toString().length <= 10) {
+        timestamp = parseInt(timestamp.toString()) * 1000;
+      }
+      value.push(new Date(parseInt(timestamp.toString())).toISOString());
+    } catch {
+      value.push(item);
     }
-    value.push(new Date(parseInt(timestamp.toString())).toISOString());
   }
   // If it is a single element list:
   if (value.length === 1) value = value[0];
@@ -19,7 +23,11 @@ export const fDateTsTz = (params: string[]): JSONValues => {
 export const fDateTzTs = (params: string[]): JSONValues => {
   let value: JSONValues = [];
   for (const item of params) {
-    value.push(new Date(item).getTime());
+    try {
+      value.push(new Date(item).getTime());
+    } catch {
+      value.push(item);
+    }
   }
   // If it is a single element list:
   if (value.length === 1) value = value[0];

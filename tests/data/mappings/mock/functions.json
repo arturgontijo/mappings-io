@@ -28,6 +28,7 @@
         ],
         "::dateTsTz1": ["DateTsTz", ["1711977010000", "1714039627"]],
         "::dateTsTz2": ["DateTsTz", ["{1711977010000}", "{1714039627}"]],
+        "::dateTsTz3": ["DateTsTz", [null]],
         "::IntFromStr": ["ToInt", ["{50.50}", 10]],
         "::IntfromHex": ["ToInt", ["0x77", 16]],
         "::floatFromFloat": ["ToFloat", [50.5035, 2]],

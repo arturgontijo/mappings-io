@@ -112,6 +112,7 @@ describe("Mappings(Process) - transformDataWithMapping(functions)", () => {
         dateTzTs2: [1711977010000, 1714039627000],
         dateTsTz1: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
         dateTsTz2: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
+        dateTsTz3: null,
         IntFromStr: 50,
         IntfromHex: 119,
         floatFromFloat: "50.50",
