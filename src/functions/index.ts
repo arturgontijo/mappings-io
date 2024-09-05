@@ -1,7 +1,7 @@
 import { JSONValues } from "@/types/generics";
 import { fSum, fDiv, fMul, fSub } from "./arithmetics";
 import { fDateTsTz, fDateTzTs } from "./dates";
-import { fConcat, fConst, fOr, fSubString } from "./misc";
+import { fConcat, fConst, fIndex, fOr, fSubString } from "./misc";
 import { fToFloat, fToInt } from "./numbers";
 
 /**
@@ -34,6 +34,8 @@ export const applyFunction = (
       return fConst(params);
     case "Concat":
       return fConcat(params);
+    case "Index":
+      return fIndex(params);
     case "SubString":
       return fSubString(params);
     case "Or":

@@ -8,7 +8,7 @@ export const preflight = (
   if (m) {
     replacer.forEach((value, tag) => {
       if (value !== undefined) {
-        m = m.replace(tag, value);
+        m = m.replaceAll(tag, value);
       }
     });
     return JSON.parse(m);

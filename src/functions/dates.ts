@@ -11,7 +11,7 @@ export const fDateTsTz = (params: string[]): JSONValues => {
       }
       value.push(new Date(parseInt(timestamp.toString())).toISOString());
     } catch {
-      value.push(item);
+      value.push(item || undefined);
     }
   }
   // If it is a single element list:
@@ -26,7 +26,7 @@ export const fDateTzTs = (params: string[]): JSONValues => {
     try {
       value.push(new Date(item).getTime());
     } catch {
-      value.push(item);
+      value.push(item || undefined);
     }
   }
   // If it is a single element list:

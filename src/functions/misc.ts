@@ -15,6 +15,16 @@ export const fConcat = (params: string[]): JSONValues => {
   return params.join("");
 };
 
+// ::index1 = ["Index", [["Zero", "One", "Two"], 1]] -> { "index1": "One" }
+export const fIndex = (params: string[]): JSONValues => {
+  if (params.length !== 2) return undefined;
+  const list = params[0];
+  const idx = parseInt(params[1]);
+  if (!Array.isArray(list)) return undefined;
+  if (list.length <= idx) return undefined;
+  return list[idx];
+};
+
 // ::data = ["SubString", ["DataNotImportant", 4]] -> { "data": "Data" }
 // ::data = ["SubString", ["NotImportantData", -4]] -> { "data": "Data" }
 export const fSubString = (params: string[]): JSONValues => {
