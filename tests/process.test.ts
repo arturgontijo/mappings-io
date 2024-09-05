@@ -446,3 +446,61 @@ describe("Mappings(Process) - setValue()", () => {
     expect(value).toEqual({ value: 0 });
   });
 });
+
+describe("Mappings(Process) - '...' fields", () => {
+  it("return processed data that uses ... on its fields", async () => {
+    const mockData = {
+      field1: 1,
+      field2: {
+        field2_1: "inner1",
+        field2_2: "inner2",
+        field2_3: "inner3",
+        field2_4: "inner4",
+        field2_5: ["inner5", "inner6"],
+        field2_6: {
+          field2_6_1: "inner7",
+          field2_6_2: "inner8",
+          field2_6_3: ["inner9", "inner10", "inner11"],
+          field2_6_4: 12,
+        },
+        field2_7: 13,
+      },
+    };
+
+    const m1: MappingsT = {
+      url: "",
+      id: "",
+      mappings: {
+        "...field2": "this_will_be_ignored",
+      },
+    };
+    const data1 = transformDataWithMapping(mockData, m1.mappings);
+    expect(data1).toEqual(mockData.field2);
+
+    const m2: MappingsT = {
+      url: "",
+      id: "",
+      mappings: {
+        fields: {
+          "-target": "field2",
+          "-xforms": {
+            field1: "field2_1",
+            field2: "field2_2",
+            "...field2_6": "this_will_be_ignored",
+          },
+        },
+      },
+    };
+    const data2 = transformDataWithMapping(mockData, m2.mappings);
+    expect(data2).toEqual({
+      fields: {
+        field1: "inner1",
+        field2: "inner2",
+        field2_6_1: "inner7",
+        field2_6_2: "inner8",
+        field2_6_3: ["inner9", "inner10", "inner11"],
+        field2_6_4: 12,
+      },
+    });
+  });
+});

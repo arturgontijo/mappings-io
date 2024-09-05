@@ -71,7 +71,7 @@ export const transformDataWithMapping = (
   data: JSONObject,
   mappings: JSONObject | undefined,
 ) => {
-  const final: JSONObject = {};
+  let final: JSONObject = {};
 
   // Nothing to do here...
   if (!mappings || Object.keys(mappings).length === 0) return data;
@@ -93,6 +93,11 @@ export const transformDataWithMapping = (
     if (key.startsWith("::")) {
       finalValue = transformWithFunction(targetData, value);
       key = key.replace("::", "");
+    } else if (key.startsWith("...")) {
+      target = key.replace("...", "");
+      finalValue = getValue(targetData, target) as JSONObject;
+      final = { ...final, ...finalValue };
+      continue;
     } else if (Array.isArray(targetData)) {
       const innerData = [];
       for (const item of targetData) {
