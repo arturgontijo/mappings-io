@@ -11,7 +11,7 @@ import { fToFloat, fToInt } from "./numbers";
  * @param _params - function parameters
  * @returns - Json with the result key:value pair with processed result
  */
-export const applyFunction = (
+export const applyFunctionDefault = (
   func: string,
   _params: JSONValues[],
 ): JSONValues => {

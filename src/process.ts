@@ -1,5 +1,5 @@
-import { JSONValues, JSONObject } from "@/types/generics";
-import { applyFunction } from "@/functions";
+import { JSONValues, JSONObject, ApplyFunctionT } from "@/types/generics";
+import { applyFunctionDefault } from "@/functions";
 
 export const setValue = (obj: JSONObject, path: string, value: JSONValues) => {
   let schema = obj;
@@ -35,7 +35,11 @@ export const getValue = (data: JSONValues, _target: string): JSONValues => {
   return currData;
 };
 
-export const transformWithFunction = (data: JSONObject, specs: JSONObject) => {
+export const transformWithFunction = (
+  data: JSONObject,
+  specs: JSONObject,
+  applyFunction: ApplyFunctionT,
+) => {
   const func = specs[0] as string;
   const params = specs[1] as string[];
   let funcParams: JSONValues = [];
@@ -70,6 +74,7 @@ export const transformWithFunction = (data: JSONObject, specs: JSONObject) => {
 export const transformDataWithMapping = (
   data: JSONObject,
   mappings: JSONObject | undefined,
+  applyFunction: ApplyFunctionT = applyFunctionDefault,
 ) => {
   let final: JSONObject = {};
 
@@ -91,7 +96,7 @@ export const transformDataWithMapping = (
       continue;
     }
     if (key.startsWith("::")) {
-      finalValue = transformWithFunction(targetData, value);
+      finalValue = transformWithFunction(targetData, value, applyFunction);
       key = key.replace("::", "");
     } else if (key.startsWith("...")) {
       target = key.replace("...", "");
@@ -102,12 +107,12 @@ export const transformDataWithMapping = (
       const innerData = [];
       for (const item of targetData) {
         if (Object.keys(xforms).length) {
-          innerData.push(transformDataWithMapping(item, xforms));
+          innerData.push(transformDataWithMapping(item, xforms, applyFunction));
         }
       }
       finalValue = innerData;
     } else if (Object.keys(xforms).length) {
-      finalValue = transformDataWithMapping(targetData, xforms);
+      finalValue = transformDataWithMapping(targetData, xforms, applyFunction);
     } else {
       const subtarget = mappings[key];
       if (Array.isArray(subtarget)) {
@@ -115,7 +120,11 @@ export const transformDataWithMapping = (
         for (const st of subtarget) {
           if (typeof st === "object")
             innerData.push(
-              transformDataWithMapping(targetData, st as JSONObject),
+              transformDataWithMapping(
+                targetData,
+                st as JSONObject,
+                applyFunction,
+              ),
             );
           else innerData.push(getValue(targetData, st as string));
         }

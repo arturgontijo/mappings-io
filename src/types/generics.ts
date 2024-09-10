@@ -17,4 +17,7 @@ export type MappingsT = {
   data?: JSONObject;
   pagination?: JSONObject;
   mappings?: JSONObject;
+  version?: number;
 };
+
+export type ApplyFunctionT = (func: string, params: JSONValues[]) => JSONValues;
