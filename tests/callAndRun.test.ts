@@ -1,6 +1,6 @@
 import { call } from "@/api/call";
 import { getOneMapping } from "./data/load";
-import { MappingsByIdT, MappingsT } from "@/types";
+import { JSONObject, MappingsByIdT, MappingsT } from "@/types";
 
 import express, { Request, Response } from "express";
 import { Server } from "http";
@@ -44,17 +44,17 @@ describe("Setting API Server up...", () => {
       return res.status(400).send({ valid: false });
     });
 
-    app.get("/api/v1/orders", async (req: Request, res: Response) => {
+    app.get("/api/v1/orders/:id?", async (req: Request, res: Response) => {
       if (req.headers.authorization === "superSecretToken") {
-        const { query } = req;
-        return res.send(
-          [
-            { id: 0, status: "approved", product: "table", price: "80.75" },
-            { id: 1, status: "refunded", product: "chair", price: "40.75" },
-            { id: 2, status: "canceled", product: "television", price: "749.99" },
-            { id: 3, status: "approved", product: "laptop", price: "1,250.00" },
-          ].filter((item) => item.status === query["status"]),
-        );
+        const { query, params } = req;
+        const orders = [
+          { id: 0, status: "approved", product: "table", price: "80.75" },
+          { id: 1, status: "refunded", product: "chair", price: "40.75" },
+          { id: 2, status: "canceled", product: "television", price: "749.99" },
+          { id: 3, status: "approved", product: "laptop", price: "1,250.00" },
+        ];
+        if (query.status) return res.send(orders.filter((item: JSONObject) => item.status === query.status));
+        if (params.id) return res.send(orders.find((item: JSONObject) => item.id === Number(params.id)));
       }
       return res.status(400).send({ valid: false });
     });
@@ -336,13 +336,16 @@ describe("Setting API Server up...", () => {
     });
   });
 
-  describe("API(get) - get() local data calling multiple mappings by using nested logic (++)", () => {
+  describe("API(get) - get() local data by calling multiple mappings using nested logic (++)", () => {
     it("return a GET response from an endpoint in a mapping JSON file", async () => {
       const m: MappingsT = await getOneMapping("mock-nested");
       const m2: MappingsT = await getOneMapping("mock-functions");
       const m3: MappingsT = await getOneMapping("mock-local-simple");
       const m4: MappingsT = await getOneMapping("mock-local-no-mappings-validate");
-      const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
+      const replacer = new Map([
+        ["<STATUS>", "refunded"],
+        ["<ACCESS_TOKEN>", "superSecretToken"],
+      ]);
       const mappingsById: MappingsByIdT = new Map([
         ["mock-functions", { mappings: m2, replacer }],
         ["mock-local-simple", { mappings: m3, replacer }],
@@ -389,6 +392,37 @@ describe("Setting API Server up...", () => {
               ],
             },
             valid: true,
+          }),
+        )
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(get) - get() local data by calling 2 other mappings (++) using fetched value (id)", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-nested-replacer");
+      const m2: MappingsT = await getOneMapping("mock-product-name-by-id");
+      const m3: MappingsT = await getOneMapping("mock-product-price-by-id");
+      const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
+      const mappingsById: MappingsByIdT = new Map([
+        ["mock-product-name-by-id", { mappings: m2, replacer }],
+        ["mock-product-price-by-id", { mappings: m3, replacer }],
+      ]);
+      await run(m, replacer, mappingsById)
+        .then((data) =>
+          expect(data).toEqual({
+            orders: [
+              {
+                uuid: 0,
+                name: "table",
+                price: "80.75",
+              },
+              {
+                uuid: 3,
+                name: "laptop",
+                price: "1,250.00",
+              },
+            ],
           }),
         )
         .catch((e) => expect(e).toBeUndefined());

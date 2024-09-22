@@ -1,0 +1,11 @@
+{
+  "id": "mock-product-name-by-id",
+  "url": "http://0.0.0.0:4444/api/v1/orders/<ID>",
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "<ACCESS_TOKEN>"
+  },
+  "mappings": {
+    "name": "product"
+  }
+}

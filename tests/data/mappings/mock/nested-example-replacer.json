@@ -1,0 +1,33 @@
+{
+  "id": "mock-nested-replacer",
+  "url": "http://0.0.0.0:4444/api/v1/orders",
+  "params": {
+    "status": "approved"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "<ACCESS_TOKEN>"
+  },
+  "mappings": {
+    "orders": {
+      "-xforms": {
+        "uuid": "id",
+        "++anything": {
+          "mId": "...mock-product-name-by-id",
+          "replacer": {
+            "ACCESS_TOKEN": "{<ACCESS_TOKEN>}",
+            "ID": "id"
+          }
+        },
+        "++price": {
+          "mId": "mock-product-price-by-id",
+          "replacer": {
+            "ACCESS_TOKEN": "{<ACCESS_TOKEN>}",
+            "ID": "id"
+          },
+          "target": "price"
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { JSONValues, JSONObject, ApplyFunctionT, MappingsByIdT } from "@/types";
+import { JSONValues, JSONObject, ApplyFunctionT, MappingsByIdT, ReplacerT } from "@/types";
 import { applyFunctionDefault } from "@/functions";
 import { run } from "./run";
 
@@ -94,14 +94,29 @@ export const transformDataWithMapping = async (
       continue;
     }
     if (key.startsWith("++") && mappingsById) {
+      let mId = String(value.mId || value);
       let isSpread = false;
-      target = String(value);
-      if (target.startsWith("...")) {
-        target = target.replace("...", "");
+      target = String(value.target || "");
+      if (mId.startsWith("...")) {
+        mId = mId.replace("...", "");
         isSpread = true;
       }
-      const m = mappingsById.get(target);
-      if (m) finalValue = await run(m.mappings, m.replacer, mappingsById, applyFunction);
+      const m = mappingsById.get(mId);
+      const mergedReplacer: ReplacerT = m?.replacer || new Map();
+      if (m) {
+        if (value.replacer) {
+          for (const [rk, rv] of Object.entries(value.replacer)) {
+            // It is not a constant so we need to fetch its value before use it.
+            let rValue = rv.replace("{", "").replace("}", "");
+            if (!(rv.startsWith("{") && rv.endsWith("}"))) {
+              rValue = getValue(targetData, rValue);
+            }
+            mergedReplacer.set(`<${rk}>`, rValue);
+          }
+        }
+        finalValue = await run(m.mappings, mergedReplacer, mappingsById, applyFunction);
+        if (target) finalValue = finalValue[target] as JSONObject;
+      }
       key = key.replace("++", "");
       if (!key || isSpread) {
         final = { ...final, ...finalValue };

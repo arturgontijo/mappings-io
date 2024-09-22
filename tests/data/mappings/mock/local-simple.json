@@ -2,7 +2,7 @@
   "id": "mock-local-simple",
   "url": "http://0.0.0.0:4444/api/v1/orders",
   "params": {
-    "status": "refunded"
+    "status": "<STATUS>"
   },
   "headers": {
     "Content-Type": "application/json",
