@@ -1,8 +1,26 @@
-import { JSONValues } from "@/types/generics";
+import { JSONValues } from "@/types";
 import { fSum, fDiv, fMul, fSub } from "./arithmetics";
 import { fDateTsTz, fDateTzTs } from "./dates";
 import { fConcat, fConst, fIndex, fOr, fSubString } from "./misc";
 import { fToFloat, fToInt } from "./numbers";
+
+type FunctionT = (params: string[]) => JSONValues;
+
+const FunctionsMap = new Map<string, FunctionT>([
+  ["Sum", fSum],
+  ["Sub", fSub],
+  ["Div", fDiv],
+  ["Mul", fMul],
+  ["DateTsTz", fDateTsTz],
+  ["DateTzTs", fDateTzTs],
+  ["Const", fConst],
+  ["Concat", fConcat],
+  ["Index", fIndex],
+  ["SubString", fSubString],
+  ["Or", fOr],
+  ["ToInt", fToInt],
+  ["ToFloat", fToFloat],
+]);
 
 /**
  * Processors for the mappings -- runs on every :: encountered on the mapping
@@ -11,40 +29,7 @@ import { fToFloat, fToInt } from "./numbers";
  * @param _params - function parameters
  * @returns - Json with the result key:value pair with processed result
  */
-export const applyFunctionDefault = (
-  func: string,
-  _params: JSONValues[],
-): JSONValues => {
-  // TODO: works but Hacky!
-  const params = _params as string[];
-  switch (func) {
-    case "Sum":
-      return fSum(params);
-    case "Sub":
-      return fSub(params);
-    case "Div":
-      return fDiv(params);
-    case "Mul":
-      return fMul(params);
-    case "DateTsTz":
-      return fDateTsTz(params);
-    case "DateTzTs":
-      return fDateTzTs(params);
-    case "Const":
-      return fConst(params);
-    case "Concat":
-      return fConcat(params);
-    case "Index":
-      return fIndex(params);
-    case "SubString":
-      return fSubString(params);
-    case "Or":
-      return fOr(params);
-    case "ToInt":
-      return fToInt(params);
-    case "ToFloat":
-      return fToFloat(params);
-    default:
-  }
-  return "";
+export const applyFunctionDefault = (func: string, params: JSONValues[]): JSONValues => {
+  const f = FunctionsMap.get(func);
+  return f ? f(params as string[]) : "";
 };

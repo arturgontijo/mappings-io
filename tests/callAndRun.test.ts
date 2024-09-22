@@ -1,6 +1,6 @@
 import { call } from "@/api/call";
 import { getOneMapping } from "./data/load";
-import { MappingsT } from "@/types/generics";
+import { MappingsByIdT, MappingsT } from "@/types";
 
 import express, { Request, Response } from "express";
 import { Server } from "http";
@@ -34,38 +34,42 @@ describe("Setting API Server up...", () => {
     app.use(BodyParser.json());
 
     app.get("/api/v1/status", async (_req: Request, res: Response) => {
-      res.send(true);
+      return res.send(true);
+    });
+
+    app.get("/api/v1/validate", async (req: Request, res: Response) => {
+      if (req.headers.authorization === "superSecretToken") {
+        return res.send({ valid: true });
+      }
+      return res.status(400).send({ valid: false });
     });
 
     app.get("/api/v1/orders", async (req: Request, res: Response) => {
       if (req.headers.authorization === "superSecretToken") {
-        return res.send({ valid: true });
+        const { query } = req;
+        return res.send(
+          [
+            { id: 0, status: "approved", product: "table", price: "80.75" },
+            { id: 1, status: "refunded", product: "chair", price: "40.75" },
+            { id: 2, status: "canceled", product: "television", price: "749.99" },
+            { id: 3, status: "approved", product: "laptop", price: "1,250.00" },
+          ].filter((item) => item.status === query["status"]),
+        );
       }
-      const { query } = req;
-      res.send(
-        [
-          { id: 0, status: "approved", product: "table", price: "80.75" },
-          { id: 1, status: "refunded", product: "chair", price: "40.75" },
-          { id: 2, status: "canceled", product: "television", price: "749.99" },
-          { id: 3, status: "approved", product: "laptop", price: "1,250.00" },
-        ].filter((item) => item.status === query["status"]),
-      );
+      return res.status(400).send({ valid: false });
     });
 
     app.get("/api/v1/meta/:campainId", async (_req: Request, res: Response) => {
-      res.send(META_ADS_CAMPAIGNS_DATA);
+      return res.send(META_ADS_CAMPAIGNS_DATA);
     });
 
     app.get("/api/v1/shopify/orders", async (_req: Request, res: Response) => {
-      res.send(SHOPIFY_ORDERS_DATA);
+      return res.send(SHOPIFY_ORDERS_DATA);
     });
 
-    app.get(
-      "/api/v1/stripe/payment_intents",
-      async (_req: Request, res: Response) => {
-        res.send(STRIPE_PAYMENT_INTENTS_DATA);
-      },
-    );
+    app.get("/api/v1/stripe/payment_intents", async (_req: Request, res: Response) => {
+      return res.send(STRIPE_PAYMENT_INTENTS_DATA);
+    });
 
     app.get("/api/v1/pages", async (req: Request, res: Response) => {
       const { page } = req.query;
@@ -148,7 +152,10 @@ describe("Setting API Server up...", () => {
         id: "test",
         url: `${API_URL}/orders`,
         params: { status: "refunded" },
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "superSecretToken",
+        },
         mappings: {},
       };
       const data = await call(m);
@@ -156,9 +163,10 @@ describe("Setting API Server up...", () => {
     });
   });
 
-  describe("API(get) - get(mock-local-orders) /orders", () => {
+  describe("API(get) - get(mock-local-no-mappings-orders) /orders", () => {
     it("return a GET response from an endpoint in a mapping JSON file", async () => {
-      const m: MappingsT = await getOneMapping("mock-local-orders");
+      const m: MappingsT = await getOneMapping("mock-local-no-mappings-orders");
+      m.headers = { Authorization: "superSecretToken" };
       const data = await call(m);
       expect(data).toHaveLength(2);
     });
@@ -166,7 +174,7 @@ describe("Setting API Server up...", () => {
 
   describe("API(get) - get() /validate with run() and replacer", () => {
     it("return a GET response from an endpoint in a mapping JSON file", async () => {
-      const m: MappingsT = await getOneMapping("mock-local-orders");
+      const m: MappingsT = await getOneMapping("mock-local-no-mappings-validate");
       const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
       const data = await run(m, replacer);
       expect(data).toEqual({ valid: true });
@@ -179,7 +187,10 @@ describe("Setting API Server up...", () => {
         id: "test",
         url: `${API_URL}/orders`,
         params: { status: "canceled" },
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "superSecretToken",
+        },
         mappings: {},
       };
       const data = await call(m);
@@ -201,9 +212,7 @@ describe("Setting API Server up...", () => {
       await call(m)
         .then()
         .catch((e) => {
-          expect(e.toString()).toEqual(
-            "AxiosError: Request failed with status code 404",
-          );
+          expect(e.toString()).toEqual("AxiosError: Request failed with status code 404");
         });
     });
   });
@@ -306,12 +315,8 @@ describe("Setting API Server up...", () => {
       const m: MappingsT = await getOneMapping("mock-local-paginated-nested");
       const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
       let targetData = MOCK_PAGINATED_NESTED_DATA_PAG_1.response.data;
-      targetData = targetData.concat(
-        MOCK_PAGINATED_NESTED_DATA_PAG_2.response.data,
-      );
-      targetData = targetData.concat(
-        MOCK_PAGINATED_NESTED_DATA_PAG_3.response.data,
-      );
+      targetData = targetData.concat(MOCK_PAGINATED_NESTED_DATA_PAG_2.response.data);
+      targetData = targetData.concat(MOCK_PAGINATED_NESTED_DATA_PAG_3.response.data);
       await run(m, replacer)
         .then((data) => expect(data).toEqual({ sales: targetData }))
         .catch((e) => expect(e).toBeUndefined());
@@ -320,19 +325,72 @@ describe("Setting API Server up...", () => {
 
   describe("API(get) - get() local paginated (nested data and link cursor) /pages with run() and replacer", () => {
     it("return a GET response from an endpoint in a mapping JSON file", async () => {
-      const m: MappingsT = await getOneMapping(
-        "mock-local-paginated-nested-link",
-      );
+      const m: MappingsT = await getOneMapping("mock-local-paginated-nested-link");
       const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
       let targetData = MOCK_PAGINATED_LINK_NESTED_DATA_PAG_1.response.data;
-      targetData = targetData.concat(
-        MOCK_PAGINATED_LINK_NESTED_DATA_PAG_2.response.data,
-      );
-      targetData = targetData.concat(
-        MOCK_PAGINATED_LINK_NESTED_DATA_PAG_3.response.data,
-      );
+      targetData = targetData.concat(MOCK_PAGINATED_LINK_NESTED_DATA_PAG_2.response.data);
+      targetData = targetData.concat(MOCK_PAGINATED_LINK_NESTED_DATA_PAG_3.response.data);
       await run(m, replacer)
         .then((data) => expect(data).toEqual({ sales: targetData }))
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(get) - get() local data calling multiple mappings by using nested logic (++)", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-nested");
+      const m2: MappingsT = await getOneMapping("mock-functions");
+      const m3: MappingsT = await getOneMapping("mock-local-simple");
+      const m4: MappingsT = await getOneMapping("mock-local-no-mappings-validate");
+      const replacer = new Map([["<ACCESS_TOKEN>", "superSecretToken"]]);
+      const mappingsById: MappingsByIdT = new Map([
+        ["mock-functions", { mappings: m2, replacer }],
+        ["mock-local-simple", { mappings: m3, replacer }],
+        ["mock-local-no-mappings-validate", { mappings: m4, replacer }],
+      ]);
+      await run(m, replacer, mappingsById)
+        .then((data) =>
+          expect(data).toEqual({
+            normalField1: "Testing...",
+            xFormsField2: [
+              { key: 0, value: "80.75" },
+              { key: 3, value: "1,250.00" },
+            ],
+            functions: {
+              const: 1,
+              constStr: ["One", "Two"],
+              constNested: [1, "2", { 3: [4, 5] }],
+              sumInt: "6.00",
+              sumStr: "6.00",
+              sum: "0.00",
+              sub: "200.00",
+              div: "5.00",
+              mul: "50000.00",
+              dateTzTs1: [1711977010000, 1714039627000],
+              dateTzTs2: [1711977010000, 1714039627000],
+              dateTsTz1: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
+              dateTsTz2: ["2024-04-01T13:10:10.000Z", "2024-04-25T10:07:07.000Z"],
+              dateTsTz3: undefined,
+              IntFromStr: 50,
+              IntfromHex: 119,
+              floatFromFloat: "50.50",
+              floatFromStr: "50.123",
+              index1: 3,
+              indexOut: undefined,
+              indexInvalid: undefined,
+            },
+            nestedRefunds: {
+              refunds: [
+                {
+                  amount: "40.75",
+                  name: "chair",
+                  uuid: 1,
+                },
+              ],
+            },
+            valid: true,
+          }),
+        )
         .catch((e) => expect(e).toBeUndefined());
     });
   });

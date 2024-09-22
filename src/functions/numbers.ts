@@ -1,4 +1,4 @@
-import { JSONValues } from "@/types/generics";
+import { JSONValues } from "@/types";
 
 // ToInt(value, base) [We need to add { } when using "."]
 // ::integer = ['ToInt', [1.234, 10]] -> { "integer": 1 }

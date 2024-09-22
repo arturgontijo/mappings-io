@@ -307,11 +307,8 @@ export const SHOPIFY_ORDERS_DATA = {
           tracking_company: "USPS",
           tracking_number: "1Z2345",
           tracking_numbers: ["1Z2345"],
-          tracking_url:
-            "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=1Z2345",
-          tracking_urls: [
-            "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=1Z2345",
-          ],
+          tracking_url: "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=1Z2345",
+          tracking_urls: ["https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=1Z2345"],
           updated_at: "2024-04-17T17:27:33-04:00",
           line_items: [
             {
@@ -1289,11 +1286,8 @@ export const SHOPIFY_ORDERS_DATA = {
           tracking_company: "USPS",
           tracking_number: "1Z2345",
           tracking_numbers: ["1Z2345"],
-          tracking_url:
-            "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=1Z2345",
-          tracking_urls: [
-            "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=1Z2345",
-          ],
+          tracking_url: "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=1Z2345",
+          tracking_urls: ["https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=1Z2345"],
           updated_at: "2024-04-17T17:27:33-04:00",
           line_items: [
             {

@@ -1,4 +1,4 @@
-import { JSONObject, MappingsT } from "@/types/generics";
+import { JSONObject, MappingsT } from "@/types";
 import axios, { AxiosHeaders, AxiosRequestConfig } from "axios";
 import { getPaginatedData } from "./pagination";
 

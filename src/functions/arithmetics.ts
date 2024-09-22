@@ -1,4 +1,4 @@
-import { JSONValues } from "@/types/generics";
+import { JSONValues } from "@/types";
 
 // ::total = ['Sum', [1, 2, 3]] -> { "total": 6 }
 export const fSum = (params: string[]): JSONValues => {

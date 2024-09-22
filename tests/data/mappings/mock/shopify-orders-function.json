@@ -24,19 +24,8 @@
         "::ip2": ["Or", ["client_details.browser_ip", "{127.0.0.1}"]],
         "ip3": "browser_ip",
         "::ip4": ["Or", ["client_details.browser_ip", "browser_ip"]],
-        "::multipleOr": [
-          "Or",
-          [
-            "app_id",
-            "cancel_reason",
-            "client_details.session_hash",
-            "financial_status"
-          ]
-        ],
-        "::multipleOrWithCont": [
-          "Or",
-          ["app_id", "cancel_reason", "{NotFound}"]
-        ]
+        "::multipleOr": ["Or", ["app_id", "cancel_reason", "client_details.session_hash", "financial_status"]],
+        "::multipleOrWithCont": ["Or", ["app_id", "cancel_reason", "{NotFound}"]]
       }
     }
   }

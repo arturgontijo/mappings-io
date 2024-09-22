@@ -1,4 +1,4 @@
-import { MappingsT } from "@/types/generics";
+import { MappingsT } from "@/types";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 

@@ -1,4 +1,4 @@
-import { JSONValues } from "@/types/generics";
+import { JSONValues } from "@/types";
 
 // ::fixed = ["Const", ["MyConstant"]] -> { "fixed": "MyConstant" }
 // ::fixed = ["Const", ["1", "2", { "3": 4 }]] -> { "fixed": ["1", "2", { "3": 4 }] }

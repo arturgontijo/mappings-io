@@ -1,5 +1,6 @@
-import { JSONValues, JSONObject, ApplyFunctionT } from "@/types/generics";
+import { JSONValues, JSONObject, ApplyFunctionT, MappingsByIdT } from "@/types";
 import { applyFunctionDefault } from "@/functions";
+import { run } from "./run";
 
 export const setValue = (obj: JSONObject, path: string, value: JSONValues) => {
   let schema = obj;
@@ -35,11 +36,7 @@ export const getValue = (data: JSONValues, _target: string): JSONValues => {
   return currData;
 };
 
-export const transformWithFunction = (
-  data: JSONObject,
-  specs: JSONObject,
-  applyFunction: ApplyFunctionT,
-) => {
+export const transformWithFunction = (data: JSONObject, specs: JSONObject, applyFunction: ApplyFunctionT) => {
   const func = specs[0] as string;
   const params = specs[1] as string[];
   let funcParams: JSONValues = [];
@@ -47,7 +44,7 @@ export const transformWithFunction = (
     // Check if p is a key from data or just a constant
     if (typeof p === "string") {
       // {VALUE} -> constant
-      if (p.includes("{")) {
+      if (func === "Const" || (p.startsWith("{") && p.endsWith("}"))) {
         const c = p.replace("{", "").replace("}", "");
         funcParams.push(c);
         continue;
@@ -71,9 +68,10 @@ export const transformWithFunction = (
   return applyFunction(func, funcParams);
 };
 
-export const transformDataWithMapping = (
+export const transformDataWithMapping = async (
   data: JSONObject,
   mappings: JSONObject | undefined,
+  mappingsById?: MappingsByIdT,
   applyFunction: ApplyFunctionT = applyFunctionDefault,
 ) => {
   let final: JSONObject = {};
@@ -95,7 +93,21 @@ export const transformDataWithMapping = (
       final[key] = targetData;
       continue;
     }
-    if (key.startsWith("::")) {
+    if (key.startsWith("++") && mappingsById) {
+      let isSpread = false;
+      target = String(value);
+      if (target.startsWith("...")) {
+        target = target.replace("...", "");
+        isSpread = true;
+      }
+      const m = mappingsById.get(target);
+      if (m) finalValue = await run(m.mappings, m.replacer, mappingsById, applyFunction);
+      key = key.replace("++", "");
+      if (!key || isSpread) {
+        final = { ...final, ...finalValue };
+        continue;
+      }
+    } else if (key.startsWith("::")) {
       finalValue = transformWithFunction(targetData, value, applyFunction);
       key = key.replace("::", "");
     } else if (key.startsWith("...")) {
@@ -107,25 +119,19 @@ export const transformDataWithMapping = (
       const innerData = [];
       for (const item of targetData) {
         if (Object.keys(xforms).length) {
-          innerData.push(transformDataWithMapping(item, xforms, applyFunction));
+          innerData.push(await transformDataWithMapping(item, xforms, mappingsById, applyFunction));
         }
       }
       finalValue = innerData;
     } else if (Object.keys(xforms).length) {
-      finalValue = transformDataWithMapping(targetData, xforms, applyFunction);
+      finalValue = await transformDataWithMapping(targetData, xforms, mappingsById, applyFunction);
     } else {
       const subtarget = mappings[key];
       if (Array.isArray(subtarget)) {
         const innerData = [];
         for (const st of subtarget) {
           if (typeof st === "object")
-            innerData.push(
-              transformDataWithMapping(
-                targetData,
-                st as JSONObject,
-                applyFunction,
-              ),
-            );
+            innerData.push(await transformDataWithMapping(targetData, st as JSONObject, mappingsById, applyFunction));
           else innerData.push(getValue(targetData, st as string));
         }
         finalValue = innerData;

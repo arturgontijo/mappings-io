@@ -1,0 +1,23 @@
+{
+  "id": "mock-nested",
+  "url": "http://0.0.0.0:4444/api/v1/orders",
+  "params": {
+    "status": "approved"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "<ACCESS_TOKEN>"
+  },
+  "mappings": {
+    "::normalField1": ["Const", ["Testing..."]],
+    "xFormsField2": {
+      "-xforms": {
+        "key": "id",
+        "value": "price"
+      }
+    },
+    "++": "mock-functions",
+    "++nestedRefunds": "mock-local-simple",
+    "++anything": "...mock-local-no-mappings-validate"
+  }
+}

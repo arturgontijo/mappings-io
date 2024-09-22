@@ -1,5 +1,5 @@
 import { getValue, setValue } from "@/process";
-import { JSONObject, JSONValues } from "@/types/generics";
+import { JSONObject, JSONValues } from "@/types";
 
 import axios, { AxiosRequestConfig } from "axios";
 
@@ -48,8 +48,7 @@ export const getPaginatedData = async (
       if (Array.isArray(targetData)) {
         if (targetData.length > 0) allData = allData.concat(targetData);
         else break;
-      } else if (Object.keys(targetData as JSONObject).length > 0)
-        allData.push(targetData);
+      } else if (Object.keys(targetData as JSONObject).length > 0) allData.push(targetData);
       else break;
       nextPage = getValue(data, key) as string;
       if (nextPage && nextPage.toString() === lastPage.toString()) {

@@ -1,5 +1,5 @@
 import { transformDataWithMapping } from "@/process";
-import { ApplyFunctionT, JSONValues, MappingsT } from "@/types/generics";
+import { ApplyFunctionT, JSONValues, MappingsT } from "@/types";
 import { getOneMapping } from "./data/load";
 import { SHOPIFY_ORDERS_DATA } from "./data";
 
@@ -19,17 +19,14 @@ describe("Functions(Process) - transformDataWithMapping()", () => {
       },
     };
 
-    const myApplyFunction: ApplyFunctionT = (
-      f: string,
-      params: JSONValues[],
-    ) => {
+    const myApplyFunction: ApplyFunctionT = (f: string, params: JSONValues[]) => {
       const _params = params as string[];
       if (f === "Test") return `testing: ${_params}`;
       else if (f === "Prod") return "mappings-io";
       return -1;
     };
 
-    const data = transformDataWithMapping({}, m.mappings, myApplyFunction);
+    const data = await transformDataWithMapping({}, m.mappings, undefined, myApplyFunction);
     expect(data).toEqual({
       functions: {
         output1: "mappings-io",
@@ -43,9 +40,12 @@ describe("Functions(Process) - transformDataWithMapping()", () => {
 describe("Mappings(Process) - transformDataWithMapping(functions)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("mock-functions");
-    const data = transformDataWithMapping({}, m.mappings);
+    const data = await transformDataWithMapping({}, m.mappings);
     expect(data).toEqual({
       functions: {
+        const: 1,
+        constStr: ["One", "Two"],
+        constNested: [1, "2", { 3: [4, 5] }],
         sumInt: "6.00",
         sumStr: "6.00",
         sum: "0.00",
@@ -72,7 +72,7 @@ describe("Mappings(Process) - transformDataWithMapping(functions)", () => {
 describe("Mappings(Process) - transformDataWithMapping(shopify-function)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("mock-shopify-orders-function");
-    const data = transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
+    const data = await transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
     expect(data).toEqual({
       functions: {
         total: "1197.88",

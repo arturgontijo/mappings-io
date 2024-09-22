@@ -1,9 +1,6 @@
-import { MappingsT } from "@/types/generics";
+import { MappingsT, ReplacerT } from "@/types";
 
-export const preflight = (
-  mappings: MappingsT,
-  replacer: Map<string, string>,
-): MappingsT => {
+export const preflight = (mappings: MappingsT, replacer: ReplacerT): MappingsT => {
   let m = JSON.stringify(mappings);
   if (m) {
     replacer.forEach((value, tag) => {

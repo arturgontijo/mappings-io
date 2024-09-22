@@ -1,31 +1,20 @@
 {
   "id": "mock-functions",
-  "url": "https://<STORE_NAME>.myshopify.com/admin/api/2024-01/orders.json",
-  "params": {
-    "status": "any",
-    "limit": "250"
-  },
-  "headers": {
-    "Content-Type": "application/json",
-    "X-Shopify-Access-Token": "<ACCESS_TOKEN>"
-  },
+  "url": "http://0.0.0.0:4444/api/v1/status",
   "mappings": {
     "functions": {
       "-xforms": {
+        "::const": ["Const", [1]],
+        "::constStr": ["Const", ["One", "{Two}"]],
+        "::constNested": ["Const", [1, "2", { "3": [4, 5] }]],
         "::sumInt": ["Sum", [1, 2, 3]],
         "::sumStr": ["Sum", ["1", "2", "3"]],
         "::sum": ["Sum", [100, -50, -25, 50, -75]],
         "::sub": ["Sub", [100, -50, -25, 50, -75]],
         "::div": ["Div", [500, 10, 2, 5]],
         "::mul": ["Mul", [500, 10, 2, 5]],
-        "::dateTzTs1": [
-          "DateTzTs",
-          ["2024-04-01T10:10:10-03:00", "2024-04-25T07:07:07-03:00"]
-        ],
-        "::dateTzTs2": [
-          "DateTzTs",
-          ["{2024-04-01T10:10:10-03:00}", "{2024-04-25T07:07:07-03:00}"]
-        ],
+        "::dateTzTs1": ["DateTzTs", ["2024-04-01T10:10:10-03:00", "2024-04-25T07:07:07-03:00"]],
+        "::dateTzTs2": ["DateTzTs", ["{2024-04-01T10:10:10-03:00}", "{2024-04-25T07:07:07-03:00}"]],
         "::dateTsTz1": ["DateTsTz", ["1711977010000", "1714039627"]],
         "::dateTsTz2": ["DateTsTz", ["{1711977010000}", "{1714039627}"]],
         "::dateTsTz3": ["DateTsTz", [null]],

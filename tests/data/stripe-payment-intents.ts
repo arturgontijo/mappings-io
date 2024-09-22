@@ -20,8 +20,7 @@ export const STRIPE_PAYMENT_INTENTS_DATA = {
       canceled_at: null,
       cancellation_reason: null,
       capture_method: "automatic",
-      client_secret:
-        "pi_3MtwBwLkdIwHu7ix28a3tqPa_secret_YrKJUKribcBjcG8HVhfZluoGH",
+      client_secret: "pi_3MtwBwLkdIwHu7ix28a3tqPa_secret_YrKJUKribcBjcG8HVhfZluoGH",
       confirmation_method: "automatic",
       created: 1680800504,
       currency: "usd",
@@ -76,8 +75,7 @@ export const STRIPE_PAYMENT_INTENTS_DATA = {
       canceled_at: null,
       cancellation_reason: null,
       capture_method: "automatic",
-      client_secret:
-        "pi_3MtwBwLkdIwHu7ix28a3tqPa_secret_YrKJUKribcBjcG8HVhfZluoGH",
+      client_secret: "pi_3MtwBwLkdIwHu7ix28a3tqPa_secret_YrKJUKribcBjcG8HVhfZluoGH",
       confirmation_method: "automatic",
       created: 1680900504,
       currency: "usd",
@@ -132,8 +130,7 @@ export const STRIPE_PAYMENT_INTENTS_DATA = {
       canceled_at: null,
       cancellation_reason: null,
       capture_method: "automatic",
-      client_secret:
-        "pi_3MtwBwLkdIwHu7ix28a3tqPa_secret_YrKJUKribcBjcG8HVhfZluoGH",
+      client_secret: "pi_3MtwBwLkdIwHu7ix28a3tqPa_secret_YrKJUKribcBjcG8HVhfZluoGH",
       confirmation_method: "automatic",
       created: 1681000504,
       currency: "usd",

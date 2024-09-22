@@ -1,4 +1,4 @@
-import { JSONValues } from "@/types/generics";
+import { JSONValues } from "@/types";
 
 // ::date = ["DateTsTz", [1710909483]] -> { "date": "2024-03-20T04:38:03.000Z" }
 export const fDateTsTz = (params: string[]): JSONValues => {

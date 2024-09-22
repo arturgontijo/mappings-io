@@ -1,36 +1,24 @@
 import { getValue, setValue, transformDataWithMapping } from "@/process";
-import { JSONValues, MappingsT } from "@/types/generics";
+import { JSONValues, MappingsT } from "@/types";
 import { getOneMapping } from "./data/load";
-import {
-  META_ADS_CAMPAIGNS_DATA,
-  SHOPIFY_ORDERS_DATA,
-  STRIPE_PAYMENT_INTENTS_DATA,
-} from "./data";
+import { META_ADS_CAMPAIGNS_DATA, SHOPIFY_ORDERS_DATA, STRIPE_PAYMENT_INTENTS_DATA } from "./data";
 
 describe("Mappings(Process) - transformDataWithMapping(shopify-orders)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("mock-shopify-orders");
-    const data = transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
+    const data = await transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
     expect(data).toEqual({
       sales: [
         {
           email: "alice.norman@mail.example.com",
           price: "598.94",
-          products: [
-            "IPod Nano - 8gb - green",
-            "IPod Nano - 8gb - red",
-            "IPod Nano - 8gb - black",
-          ],
+          products: ["IPod Nano - 8gb - green", "IPod Nano - 8gb - red", "IPod Nano - 8gb - black"],
           status: "paid",
         },
         {
           email: "bob.norman@mail.example.com",
           price: "598.94",
-          products: [
-            "IPod Nano - 8gb - green",
-            "IPod Nano - 8gb - red",
-            "IPod Nano - 8gb - black",
-          ],
+          products: ["IPod Nano - 8gb - green", "IPod Nano - 8gb - red", "IPod Nano - 8gb - black"],
           status: "partially_refunded",
         },
       ],
@@ -41,7 +29,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-orders)", () => {
 describe("Mappings(Process) - transformDataWithMapping(shopify-summary)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("mock-shopify-orders-summary");
-    const data = transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
+    const data = await transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
     expect(data).toEqual({
       summary: {
         items: "6.00",
@@ -54,7 +42,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-summary)", () => 
 describe("Mappings(Process) - transformDataWithMapping(shopify-complex)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("mock-shopify-orders-complex");
-    const data = transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
+    const data = await transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
     expect(data).toEqual({
       sales: {
         products: [
@@ -107,10 +95,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
           "-xforms": {
             customer: {
               "-xforms": {
-                "::name": [
-                  "Concat",
-                  ["customer.first_name", " ", "customer.last_name"],
-                ],
+                "::name": ["Concat", ["customer.first_name", " ", "customer.last_name"]],
                 email: "customer.email",
                 phone: "customer.phone",
                 browser: {
@@ -139,7 +124,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
         },
       },
     };
-    const data = transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
+    const data = await transformDataWithMapping(SHOPIFY_ORDERS_DATA, m.mappings);
     expect(data).toEqual({
       data: [
         {
@@ -152,11 +137,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
               userAgent: "Mozilla/5.0 (Linux)",
             },
           },
-          customerNameArray: [
-            { customerName1: "Alice" },
-            { customerName2: { name: "Alice" } },
-            "Alice",
-          ],
+          customerNameArray: [{ customerName1: "Alice" }, { customerName2: { name: "Alice" } }, "Alice"],
         },
         {
           customer: {
@@ -165,11 +146,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
             phone: "+16136120707",
             browser: null,
           },
-          customerNameArray: [
-            { customerName1: "Bob" },
-            { customerName2: { name: "Bob" } },
-            "Bob",
-          ],
+          customerNameArray: [{ customerName1: "Bob" }, { customerName2: { name: "Bob" } }, "Bob"],
         },
       ],
     });
@@ -179,10 +156,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
 describe("Mappings(Process) - transformDataWithMapping(stripe-payment-intents)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("stripe-payment-intents");
-    const data = transformDataWithMapping(
-      STRIPE_PAYMENT_INTENTS_DATA,
-      m.mappings,
-    );
+    const data = await transformDataWithMapping(STRIPE_PAYMENT_INTENTS_DATA, m.mappings);
     expect(data).toEqual({
       sales: [
         {
@@ -208,10 +182,7 @@ describe("Mappings(Process) - transformDataWithMapping(stripe-payment-intents)",
 describe("Mappings(Process) - transformDataWithMapping(stripe-payment-intents-summary)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("stripe-payment-intents-summary");
-    const data = transformDataWithMapping(
-      STRIPE_PAYMENT_INTENTS_DATA,
-      m.mappings,
-    );
+    const data = await transformDataWithMapping(STRIPE_PAYMENT_INTENTS_DATA, m.mappings);
     expect(data).toEqual({
       summary: {
         sales: "6000.00",
@@ -223,10 +194,7 @@ describe("Mappings(Process) - transformDataWithMapping(stripe-payment-intents-su
 describe("Mappings(Process) - transformDataWithMapping(stripe-no-xforms)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("mock-stripe-no-xforms");
-    const data = transformDataWithMapping(
-      STRIPE_PAYMENT_INTENTS_DATA,
-      m.mappings,
-    );
+    const data = await transformDataWithMapping(STRIPE_PAYMENT_INTENTS_DATA, m.mappings);
     expect(data).toEqual({
       sales: STRIPE_PAYMENT_INTENTS_DATA.data,
     });
@@ -236,10 +204,7 @@ describe("Mappings(Process) - transformDataWithMapping(stripe-no-xforms)", () =>
 describe("Mappings(Process) - transformDataWithMapping(stripe-no-mappings)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("mock-stripe-no-mappings");
-    const data = transformDataWithMapping(
-      STRIPE_PAYMENT_INTENTS_DATA,
-      m.mappings,
-    );
+    const data = await transformDataWithMapping(STRIPE_PAYMENT_INTENTS_DATA, m.mappings);
     expect(data).toEqual(STRIPE_PAYMENT_INTENTS_DATA);
   });
 });
@@ -247,7 +212,7 @@ describe("Mappings(Process) - transformDataWithMapping(stripe-no-mappings)", () 
 describe("Mappings(Process) - transformDataWithMapping(facebook)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = await getOneMapping("meta-ads-campaigns");
-    const data = transformDataWithMapping(META_ADS_CAMPAIGNS_DATA, m.mappings);
+    const data = await transformDataWithMapping(META_ADS_CAMPAIGNS_DATA, m.mappings);
     expect(data).toEqual({
       campaigns: {
         campaignId: "6042147342661",
@@ -284,10 +249,7 @@ describe("Mappings(Process) - transformDataWithMapping(Mul and Const)", () => {
             "::multiplyAgain": ["Mul", [8, 1]],
             "::constantOne": ["Const", ["TestOne"]],
             "::constantTwo": ["Const", ["TestTwo", 3, 4]],
-            "::constantThree": [
-              "Const",
-              ["TestFive", "TestSix", [1, 2], { status: true }],
-            ],
+            "::constantThree": ["Const", ["TestFive", "TestSix", [1, 2], { status: true }]],
             "::subStringOne": ["SubString", ["OneTest", 3]],
             "::subStringTwo": ["SubString", ["TestTwo", -3]],
             "::subStringThree": ["SubString", ["Three", 10]],
@@ -295,10 +257,7 @@ describe("Mappings(Process) - transformDataWithMapping(Mul and Const)", () => {
         },
       },
     };
-    const data = transformDataWithMapping(
-      STRIPE_PAYMENT_INTENTS_DATA,
-      m.mappings,
-    );
+    const data = await transformDataWithMapping(STRIPE_PAYMENT_INTENTS_DATA, m.mappings);
     expect(data).toEqual({
       data: {
         multiply: "210.00",
@@ -324,19 +283,19 @@ describe("Mappings(Process) - transformDataWithMapping(non-existing-target)", ()
         data: "field",
       },
     };
-    let data = transformDataWithMapping(mockData, m.mappings);
+    let data = await transformDataWithMapping(mockData, m.mappings);
     expect(data).toEqual({ data: undefined });
 
     m.mappings = {
       data: "field.subfield",
     };
-    data = transformDataWithMapping(mockData, m.mappings);
+    data = await transformDataWithMapping(mockData, m.mappings);
     expect(data).toEqual({ data: undefined });
 
     m.mappings = {
       data: "field.subfield.subsubfield.subsubsubfield",
     };
-    data = transformDataWithMapping(mockData, m.mappings);
+    data = await transformDataWithMapping(mockData, m.mappings);
     expect(data).toEqual({ data: undefined });
   });
 });
@@ -413,7 +372,7 @@ describe("Mappings(Process) - '...' fields", () => {
         "...field2": "this_will_be_ignored",
       },
     };
-    const data1 = transformDataWithMapping(mockData, m1.mappings);
+    const data1 = await transformDataWithMapping(mockData, m1.mappings);
     expect(data1).toEqual(mockData.field2);
 
     const m2: MappingsT = {
@@ -430,7 +389,7 @@ describe("Mappings(Process) - '...' fields", () => {
         },
       },
     };
-    const data2 = transformDataWithMapping(mockData, m2.mappings);
+    const data2 = await transformDataWithMapping(mockData, m2.mappings);
     expect(data2).toEqual({
       fields: {
         field1: "inner1",

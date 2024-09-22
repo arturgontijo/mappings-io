@@ -1,9 +1,6 @@
 {
-  "id": "mock-local-orders",
-  "url": "http://0.0.0.0:4444/api/v1/orders",
-  "params": {
-    "status": "approved"
-  },
+  "id": "mock-local-no-mappings-validate",
+  "url": "http://0.0.0.0:4444/api/v1/validate",
   "headers": {
     "Content-Type": "application/json",
     "Authorization": "<ACCESS_TOKEN>"
