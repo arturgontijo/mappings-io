@@ -49,10 +49,6 @@ export const transformWithFunction = (data: JSONObject, specs: JSONObject, apply
         funcParams.push(c);
         continue;
       }
-      if (Object.keys(data).includes(p)) {
-        funcParams.push(data[p]);
-        continue;
-      }
       if (data[p.split(".")[0]!] || p.split(".").length > 1) {
         const values = getValue(data, p);
         if (Array.isArray(values)) {
@@ -60,6 +56,9 @@ export const transformWithFunction = (data: JSONObject, specs: JSONObject, apply
         } else {
           funcParams.push(values);
         }
+        continue;
+      } else {
+        funcParams.push(data[p]);
         continue;
       }
     }

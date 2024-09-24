@@ -87,7 +87,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-complex)", () => 
 describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", () => {
   it("return an xform object of a given data and target", async () => {
     const m: MappingsT = {
-      id: "nexted",
+      id: "nested",
       url: "",
       mappings: {
         data: {
@@ -95,7 +95,8 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
           "-xforms": {
             customer: {
               "-xforms": {
-                "::name": ["Concat", ["customer.first_name", " ", "customer.last_name"]],
+                "::name": ["Concat", ["customer.first_name", "{ }", "customer.last_name"]],
+                "::hyphen": ["Concat", ["invalid_field1", "{-}", "invalid_field2"]],
                 email: "customer.email",
                 phone: "customer.phone",
                 browser: {
@@ -130,6 +131,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
         {
           customer: {
             name: "Alice Norman",
+            hyphen: "-",
             email: "alice.norman@mail.example.com",
             phone: "+16136120707",
             browser: {
@@ -142,6 +144,7 @@ describe("Mappings(Process) - transformDataWithMapping(shopify-concat-nested)", 
         {
           customer: {
             name: "Bob Norman",
+            hyphen: "-",
             email: "bob.norman@mail.example.com",
             phone: "+16136120707",
             browser: null,
@@ -250,9 +253,9 @@ describe("Mappings(Process) - transformDataWithMapping(Mul and Const)", () => {
             "::constantOne": ["Const", ["TestOne"]],
             "::constantTwo": ["Const", ["TestTwo", 3, 4]],
             "::constantThree": ["Const", ["TestFive", "TestSix", [1, 2], { status: true }]],
-            "::subStringOne": ["SubString", ["OneTest", 3]],
-            "::subStringTwo": ["SubString", ["TestTwo", -3]],
-            "::subStringThree": ["SubString", ["Three", 10]],
+            "::subStringOne": ["SubString", ["{OneTest}", 3]],
+            "::subStringTwo": ["SubString", ["{TestTwo}", -3]],
+            "::subStringThree": ["SubString", ["{Three}", 10]],
           },
         },
       },
