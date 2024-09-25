@@ -3,8 +3,8 @@ import { JSONValues } from "@/types";
 // ToInt(value, base) [We need to add { } when using "."]
 // ::integer = ['ToInt', [1.234, 10]] -> { "integer": 1 }
 // ::integer = ['ToInt', ["{1.234}", 10]] -> { "integer": 1 }
-// ::integer = ['ToInt', ["0x20", 16] -> { "integer": 32}
-// ::integer = ['ToInt', ["32", 16] -> { "integer": 50 }
+// ::integer = ['ToInt', ["{0x20}", 16] -> { "integer": 32}
+// ::integer = ['ToInt', ["{32}", 16] -> { "integer": 50 }
 export const fToInt = (params: string[]): JSONValues => {
   let base = 10;
   if (params.length === 2) base = parseInt(params[1]);

@@ -19,7 +19,7 @@ export const fDateTsTz = (params: string[]): JSONValues => {
   return value;
 };
 
-// ::date = ["DateTzTs", [2024-03-20T04:38:03.000Z]] -> { "date": "1710909483" }
+// ::date = ["DateTzTs", [{2024-03-20T04:38:03.000Z}]] -> { "date": "1710909483" }
 export const fDateTzTs = (params: string[]): JSONValues => {
   let value: JSONValues = [];
   for (const item of params) {

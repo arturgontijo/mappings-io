@@ -1,32 +1,34 @@
 import { JSONValues } from "@/types";
 
-// ::fixed = ["Const", ["MyConstant"]] -> { "fixed": "MyConstant" }
-// ::fixed = ["Const", ["1", "2", { "3": 4 }]] -> { "fixed": ["1", "2", { "3": 4 }] }
+// ::fixed = ["Const", ["{MyConstant}"]] -> { "fixed": "MyConstant" }
+// ::fixed = ["Const", ["{1}", "{2}", { "3": 4 }]] -> { "fixed": ["1", "2", { "3": 4 }] }
 export const fConst = (params: string[]): JSONValues => {
   // If it is a single element list:
   if (params.length === 1) return params[0];
   return params;
 };
 
-// ::name = ["Concat", ["Foo", " ", "Bar"]] -> { "name": "Foo Bar" }
+// ::name = ["Concat", ["{Foo}", " ", "{Bar}"]] -> { "name": "Foo Bar" }
 export const fConcat = (params: string[]): JSONValues => {
   // If it is a single element list:
   if (params.length === 1) return params[0];
   return params.join("");
 };
 
-// ::index1 = ["Index", [["Zero", "One", "Two"], 1]] -> { "index1": "One" }
+// ::index1 = ["Index", [["{Zero}", "{One}", "{Two}"], 1]] -> { "index1": "One" }
 export const fIndex = (params: string[]): JSONValues => {
-  if (params.length !== 2) return undefined;
-  const list = params[0];
-  const idx = parseInt(params[1]);
+  if (params.length < 2) return undefined;
+  let list: string[] = [];
+  if (Array.isArray(params[0])) list = params[0];
+  else list = params.slice(0, -1);
+  const idx = parseInt(params[params.length - 1]);
   if (!Array.isArray(list)) return undefined;
   if (list.length <= idx) return undefined;
   return list[idx];
 };
 
-// ::data = ["SubString", ["DataNotImportant", 4]] -> { "data": "Data" }
-// ::data = ["SubString", ["NotImportantData", -4]] -> { "data": "Data" }
+// ::data = ["SubString", ["{DataNotImportant}", 4]] -> { "data": "Data" }
+// ::data = ["SubString", ["{NotImportantData}", -4]] -> { "data": "Data" }
 export const fSubString = (params: string[]): JSONValues => {
   if (params.length === 2) {
     const idx = parseInt(params[1]);

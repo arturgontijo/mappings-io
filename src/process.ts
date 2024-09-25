@@ -44,7 +44,7 @@ export const transformWithFunction = (data: JSONObject, specs: JSONObject, apply
     // Check if p is a key from data or just a constant
     if (typeof p === "string") {
       // {VALUE} -> constant
-      if (func === "Const" || (p.startsWith("{") && p.endsWith("}"))) {
+      if (p.startsWith("{") && p.endsWith("}")) {
         const c = p.replace("{", "").replace("}", "");
         funcParams.push(c);
         continue;

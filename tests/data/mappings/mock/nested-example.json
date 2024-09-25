@@ -9,7 +9,7 @@
     "Authorization": "<ACCESS_TOKEN>"
   },
   "mappings": {
-    "::normalField1": ["Const", ["Testing..."]],
+    "::normalField1": ["Const", ["{Testing...}"]],
     "xFormsField2": {
       "-xforms": {
         "key": "id",

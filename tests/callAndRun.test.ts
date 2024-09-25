@@ -249,6 +249,7 @@ describe("Setting API Server up...", () => {
         },
         newFunctions: [
           {
+            gateway: "bogus",
             ip1: "0.0.0.1",
             ip2: "0.0.0.1",
             ip3: "0.0.0.1",
@@ -257,6 +258,7 @@ describe("Setting API Server up...", () => {
             multipleOrWithCont: "NotFound",
           },
           {
+            gateway: "bogus",
             ip1: null,
             ip2: "127.0.0.1",
             ip3: "0.0.0.2",

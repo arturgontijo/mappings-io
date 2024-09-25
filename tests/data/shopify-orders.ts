@@ -103,6 +103,7 @@ export const SHOPIFY_ORDERS_DATA = {
       number: 0,
       order_number: 1000,
       order_status_url:
+        // eslint-disable-next-line max-len
         "https://jsmith.myshopify.com/548380009/orders/b1946ac92492d2347c6235b4d2611184/authenticate?key=imasecretipod&none=UwFQAVNFU1lQ",
       original_total_additional_fees_set: null,
       original_total_duties_set: null,
@@ -1082,6 +1083,7 @@ export const SHOPIFY_ORDERS_DATA = {
       number: 1,
       order_number: 1001,
       order_status_url:
+        // eslint-disable-next-line max-len
         "https://jsmith.myshopify.com/548380009/orders/b1946ac92492d2347c6235b4d2611184/authenticate?key=imasecretipod&none=UwFQAVNFU1lQ",
       original_total_additional_fees_set: null,
       original_total_duties_set: null,

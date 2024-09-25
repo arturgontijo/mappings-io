@@ -250,9 +250,9 @@ describe("Mappings(Process) - transformDataWithMapping(Mul and Const)", () => {
           "-xforms": {
             "::multiply": ["Mul", [5, 6, 7]],
             "::multiplyAgain": ["Mul", [8, 1]],
-            "::constantOne": ["Const", ["TestOne"]],
-            "::constantTwo": ["Const", ["TestTwo", 3, 4]],
-            "::constantThree": ["Const", ["TestFive", "TestSix", [1, 2], { status: true }]],
+            "::constantOne": ["Const", ["{TestOne}"]],
+            "::constantTwo": ["Const", ["{TestTwo}", 3, 4]],
+            "::constantThree": ["Const", ["{TestFive}", "{TestSix}", [1, 2], { status: true }]],
             "::subStringOne": ["SubString", ["{OneTest}", 3]],
             "::subStringTwo": ["SubString", ["{TestTwo}", -3]],
             "::subStringThree": ["SubString", ["{Three}", 10]],

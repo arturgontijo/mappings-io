@@ -20,6 +20,7 @@
     "newFunctions": {
       "-target": "orders",
       "-xforms": {
+        "::gateway": ["Index", ["payment_gateway_names", 0]],
         "ip1": "client_details.browser_ip",
         "::ip2": ["Or", ["client_details.browser_ip", "{127.0.0.1}"]],
         "ip3": "browser_ip",
