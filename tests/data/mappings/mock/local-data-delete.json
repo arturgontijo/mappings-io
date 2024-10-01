@@ -1,0 +1,15 @@
+{
+  "id": "mock-delete-data",
+  "url": "http://0.0.0.0:4444/api/v1/data",
+  "method": "DELETE",
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "<ACCESS_TOKEN>"
+  },
+  "params": {
+    "id": "<PRODUCT_ID>"
+  },
+  "mappings": {
+    "status": "delete"
+  }
+}

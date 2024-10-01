@@ -3,8 +3,9 @@ import { getOneMapping } from "./data/load";
 import { JSONObject, MappingsByIdT, MappingsT } from "@/types";
 
 import express, { Request, Response } from "express";
+import multer from "multer";
+
 import { Server } from "http";
-import BodyParser from "body-parser";
 import { run } from "@/run";
 import {
   META_ADS_CAMPAIGNS_DATA,
@@ -31,7 +32,9 @@ describe("Setting API Server up...", () => {
   let server: Server;
   beforeAll((done) => {
     const app = express();
-    app.use(BodyParser.json());
+    // app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+    const upload = multer({ dest: "/tmp/mappings-io/uploads/" });
 
     app.get("/api/v1/status", async (_req: Request, res: Response) => {
       return res.send(true);
@@ -100,11 +103,56 @@ describe("Setting API Server up...", () => {
     app.get("/api/v1/nested-page-1", async (_req: Request, res: Response) => {
       return res.send(MOCK_PAGINATED_LINK_NESTED_DATA_PAG_1);
     });
+
     app.get("/api/v1/nested-page-2", async (_req: Request, res: Response) => {
       return res.send(MOCK_PAGINATED_LINK_NESTED_DATA_PAG_2);
     });
+
     app.get("/api/v1/nested-page-3", async (_req: Request, res: Response) => {
       return res.send(MOCK_PAGINATED_LINK_NESTED_DATA_PAG_3);
+    });
+
+    app.post("/api/v1/files", upload.single("file"), (req: Request, res: Response) => {
+      if (req.headers.authorization === "superSecretToken") {
+        if (!req.file) return res.status(400).json({ status: 404, error: "No file provided" });
+        try {
+          return res.status(200).send({
+            status: 200,
+            id: req.body.id || "NO_ID",
+            name: `uploaded_${req.file.originalname}`,
+            size: req.file.size,
+            mimetype: req.file.mimetype,
+          });
+        } catch (error) {
+          console.error("Error editing file:", error);
+        }
+      }
+      return res.status(401).send({ status: false });
+    });
+
+    app.post("/api/v1/data", (req: Request, res: Response) => {
+      if (req.headers.authorization === "superSecretToken") {
+        if (!req.body) return res.status(400).json({ status: 400, error: "No data" });
+        return res.status(200).send({ create: true, ...req.body });
+      }
+      return res.status(401).send({ create: false });
+    });
+
+    app.put("/api/v1/data", (req: Request, res: Response) => {
+      if (req.headers.authorization === "superSecretToken") {
+        if (!req.body) return res.status(400).json({ status: 400, error: "No data" });
+        return res.status(200).send({ update: true, ...req.body });
+      }
+      return res.status(401).send({ update: false });
+    });
+
+    app.delete("/api/v1/data", (req: Request, res: Response) => {
+      if (req.headers.authorization === "superSecretToken") {
+        const { id } = req.query;
+        if (!id) return res.status(400).json({ status: 400, error: "No id" });
+        return res.status(200).send({ delete: true, id });
+      }
+      return res.status(401).send({ delete: false });
     });
 
     server = app.listen(PORT, done);
@@ -426,6 +474,69 @@ describe("Setting API Server up...", () => {
             ],
           }),
         )
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(post) - post() data using simple field and file", () => {
+    it("return a POST response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-file-uploader");
+      const replacer = new Map([
+        ["<ACCESS_TOKEN>", "superSecretToken"],
+        ["<FILE_ID>", "myFileId"],
+        ["<FILE_PATH>", "tests/data/files/testFile.txt"],
+      ]);
+      await run(m, replacer)
+        .then((data) =>
+          expect(data).toEqual({
+            status: 200,
+            fileId: "myFileId",
+            fileName: "uploaded_testFile.txt",
+            fileSize: 134,
+          }),
+        )
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(post) - post() data using simple fields", () => {
+    it("return a POST response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-post-data");
+      const replacer = new Map([
+        ["<ACCESS_TOKEN>", "superSecretToken"],
+        ["<PRODUCT_ID>", "0"],
+        ["<PRODUCT_NAME>", "Book"],
+        ["<PRODUCT_PRICE>", "9.97"],
+      ]);
+      await run(m, replacer)
+        .then((data) => expect(data).toEqual({ status: true }))
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(put) - put() data using simple fields", () => {
+    it("return a PUT response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-put-data");
+      const replacer = new Map([
+        ["<ACCESS_TOKEN>", "superSecretToken"],
+        ["<PRODUCT_ID>", "0"],
+        ["<PRODUCT_NAME>", "Table"],
+      ]);
+      await run(m, replacer)
+        .then((data) => expect(data).toEqual({ status: true }))
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(delete) - delete() data using simple fields", () => {
+    it("return a DELETE response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-delete-data");
+      const replacer = new Map([
+        ["<ACCESS_TOKEN>", "superSecretToken"],
+        ["<PRODUCT_ID>", "0"],
+      ]);
+      await run(m, replacer)
+        .then((data) => expect(data).toEqual({ status: true }))
         .catch((e) => expect(e).toBeUndefined());
     });
   });

@@ -1,4 +1,6 @@
-import { MappingsT, ReplacerT } from "@/types";
+import { JSONObject, MappingsT, ReplacerT } from "@/types";
+import * as fs from "fs";
+import FormData from "form-data";
 
 export const preflight = (mappings: MappingsT, replacer: ReplacerT): MappingsT => {
   let m = JSON.stringify(mappings);
@@ -11,4 +13,16 @@ export const preflight = (mappings: MappingsT, replacer: ReplacerT): MappingsT =
     return JSON.parse(m);
   }
   return {} as MappingsT;
+};
+
+export const handleDataFields = async (data: JSONObject) => {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(data)) {
+    const sValue = String(value);
+    if (sValue.startsWith("@")) {
+      const filePath = sValue.substring(1);
+      formData.append(key, fs.createReadStream(filePath));
+    } else formData.append(key, sValue);
+  }
+  return formData;
 };

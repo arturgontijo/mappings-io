@@ -1,0 +1,19 @@
+{
+  "id": "mock-file-uploader",
+  "url": "http://0.0.0.0:4444/api/v1/files",
+  "method": "POST",
+  "headers": {
+    "Content-Type": "multipart/form-data",
+    "Authorization": "<ACCESS_TOKEN>"
+  },
+  "data": {
+    "id": "<FILE_ID>",
+    "file": "@<FILE_PATH>"
+  },
+  "mappings": {
+    "status": "status",
+    "fileId": "id",
+    "fileName": "name",
+    "fileSize": "size"
+  }
+}

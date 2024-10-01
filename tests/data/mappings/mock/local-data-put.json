@@ -1,0 +1,16 @@
+{
+  "id": "mock-put-data",
+  "url": "http://0.0.0.0:4444/api/v1/data",
+  "method": "PUT",
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "<ACCESS_TOKEN>"
+  },
+  "data": {
+    "id": "<PRODUCT_ID>",
+    "name": "<NEW_PRODUCT_ID>"
+  },
+  "mappings": {
+    "status": "update"
+  }
+}

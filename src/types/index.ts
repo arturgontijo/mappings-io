@@ -1,5 +1,7 @@
+import FormData from "form-data";
+
 export type JSONObject = { [index: string]: JSONValues };
-export type JSONValues = string | number | boolean | null | undefined | JSONValues[] | JSONObject;
+export type JSONValues = string | number | boolean | null | undefined | Buffer | JSONValues[] | JSONObject;
 
 export type MappingsT = {
   id: string;
@@ -7,7 +9,7 @@ export type MappingsT = {
   method?: string;
   params?: JSONObject;
   headers?: JSONObject;
-  data?: JSONObject;
+  data?: JSONObject | FormData;
   pagination?: JSONObject;
   mappings?: JSONObject;
   version?: number;
