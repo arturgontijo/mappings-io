@@ -4,6 +4,7 @@ import { JSONObject, MappingsByIdT, MappingsT } from "@/types";
 
 import express, { Request, Response } from "express";
 import multer from "multer";
+import fs from "fs";
 
 import { Server } from "http";
 import { run } from "@/run";
@@ -115,17 +116,24 @@ describe("Setting API Server up...", () => {
     app.post("/api/v1/files", upload.single("file"), (req: Request, res: Response) => {
       if (req.headers.authorization === "superSecretToken") {
         if (!req.file) return res.status(400).json({ status: 404, error: "No file provided" });
-        try {
-          return res.status(200).send({
-            status: 200,
-            id: req.body.id || "NO_ID",
-            name: `uploaded_${req.file.originalname}`,
-            size: req.file.size,
-            mimetype: req.file.mimetype,
-          });
-        } catch (error) {
-          console.error("Error editing file:", error);
-        }
+        return res.status(200).send({
+          status: 200,
+          id: req.body.id || "NO_ID",
+          name: `uploaded_${req.file.originalname}`,
+          size: req.file.size,
+          mimetype: req.file.mimetype,
+        });
+      }
+      return res.status(401).send({ status: false });
+    });
+
+    app.get("/api/v1/files/:id?", (req: Request, res: Response) => {
+      const { id: fileId } = req.params;
+      if (req.headers.authorization === "superSecretToken") {
+        if (!fileId) return res.status(400).json({ status: 400, error: "No fileId provided" });
+        const filePath = `tests/data/files/testFileId${fileId}.txt`;
+        const content = fs.readFileSync(filePath);
+        return res.end(content);
       }
       return res.status(401).send({ status: false });
     });
@@ -495,6 +503,29 @@ describe("Setting API Server up...", () => {
             fileSize: 134,
           }),
         )
+        .catch((e) => expect(e).toBeUndefined());
+    });
+  });
+
+  describe("API(get) - get() data using responseType: arraybuffer", () => {
+    it("return a GET response from an endpoint in a mapping JSON file", async () => {
+      const m: MappingsT = await getOneMapping("mock-file-downloader");
+      const replacer = new Map([
+        ["<ACCESS_TOKEN>", "superSecretToken"],
+        ["<FILE_ID>", "0"],
+      ]);
+      const filePath = `tests/data/files/testFileId0.txt`;
+      const testFileId0 = fs.readFileSync(filePath);
+      await run<Buffer>(m, replacer)
+        .then((data) => {
+          const filePath = "/tmp/mappings-io/myDownloadedFile.txt";
+          fs.writeFileSync(filePath, data);
+          const downloadedFile = fs.readFileSync(filePath);
+          expect(downloadedFile).toEqual(testFileId0);
+          fs.unlink(filePath, (err) => {
+            if (err) throw new Error(`Error: ${err}`);
+          });
+        })
         .catch((e) => expect(e).toBeUndefined());
     });
   });

@@ -113,7 +113,7 @@ export const transformDataWithMapping = async (
             mergedReplacer.set(`<${rk}>`, rValue);
           }
         }
-        finalValue = await run(m.mappings, mergedReplacer, mappingsById, applyFunction);
+        finalValue = await run<JSONObject>(m.mappings, mergedReplacer, mappingsById, applyFunction);
         if (target) finalValue = finalValue[target] as JSONObject;
       }
       key = key.replace("++", "");

@@ -9,6 +9,7 @@ export type MappingsT = {
   method?: string;
   params?: JSONObject;
   headers?: JSONObject;
+  responseType?: string;
   data?: JSONObject | FormData;
   pagination?: JSONObject;
   mappings?: JSONObject;
